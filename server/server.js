@@ -18,7 +18,10 @@ await connectCloudinary()
 
 // Middlewares
 app.use(cors({
-  origin: 'https://lms-full-stack-taupe-six.vercel.app',
+  origin: [
+    'http://localhost:5173', // or whatever your local port is
+    'https://lms-full-stack-taupe-six.vercel.app'
+  ],
   credentials: true
 }))
 app.use(clerkMiddleware())
