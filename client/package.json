@@ -11,8 +11,16 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.17.1",
+    "@clerk/express": "^1.7.6",
     "axios": "^1.7.8",
+    "cloudinary": "^2.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
     "humanize-duration": "^3.32.1",
+    "mongoose": "^8.16.3",
+    "multer": "^2.0.1",
+    "nodemon": "^3.1.10",
     "quill": "^2.0.3",
     "rc-progress": "^4.0.0",
     "react": "^18.3.1",
@@ -21,6 +29,8 @@
     "react-simple-star-rating": "^5.1.7",
     "react-toastify": "^10.0.6",
     "react-youtube": "^10.1.0",
+    "stripe": "^18.3.0",
+    "svix": "^1.42.0",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {
