@@ -2,8 +2,8 @@ import Course from "../models/Course.js"
 import { CourseProgress } from "../models/CourseProgress.js"
 import { Purchase } from "../models/Purchase.js"
 import User from "../models/User.js"
-import axios from "axios"
-import crypto from "crypto"
+import { StandardCheckoutClient, Env, MetaInfo, StandardCheckoutPayRequest } from 'pg-sdk-node';
+import { randomUUID } from 'crypto';
 
 
 // Get User Data
@@ -27,77 +27,58 @@ export const getUserData = async (req, res) => {
 
 // Purchase Course 
 export const purchaseCourse = async (req, res) => {
+    // Log at the very start
+    console.log('purchaseCourse called');
+    const clientId = process.env.PHONEPE_CLIENT_ID || '<clientId>';
+    const clientSecret = process.env.PHONEPE_CLIENT_SECRET || '<clientSecret>';
+    const clientVersion = 1; // Set your client version
+    const env = Env.SANDBOX; // Use Env.PRODUCTION when live
+    console.log('PhonePe clientId:', clientId);
+    console.log('PhonePe clientSecret:', clientSecret);
     try {
-        const { courseId } = req.body
-        const { origin } = req.headers
-        const userId = req.auth.userId
-        const courseData = await Course.findById(courseId)
-        const userData = await User.findById(userId)
+        const { courseId } = req.body;
+        const { origin } = req.headers;
+        const userId = req.auth.userId;
+        const courseData = await Course.findById(courseId);
+        const userData = await User.findById(userId);
         if (!userData || !courseData) {
-            return res.json({ success: false, message: 'Data Not Found' })
+            return res.json({ success: false, message: 'Data Not Found' });
         }
         const purchaseData = {
             courseId: courseData._id,
             userId,
             amount: (courseData.coursePrice - courseData.discount * courseData.coursePrice / 100).toFixed(2),
-        }
-        const newPurchase = await Purchase.create(purchaseData)
-        // PhonePe Payment Initiation
-        const merchantId = process.env.PHONEPE_MERCHANT_ID || 'TEST-M23WZA4AO5BZG_25071'
-        const saltKey = process.env.PHONEPE_SALT_KEY || 'MzVmZjRiMGMtMTgxNC00ZjZhLTkyNGItMDc4ZTdmY2JmYTY4'
-        const baseUrl = 'https://api-preprod.phonepe.com/apis/pg-sandbox'
-        const amountPaise = Math.floor(newPurchase.amount * 100)
-        const redirectUrl = `${origin}/loading/my-enrollments`
-        const callbackUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/user/phonepe-webhook`
-        const payload = {
-            merchantId,
-            merchantTransactionId: newPurchase._id.toString(),
-            merchantUserId: userId,
-            amount: amountPaise,
-            redirectUrl,
-            callbackUrl,
-            paymentInstrument: {
-                type: 'PAY_PAGE'
-            }
-        }
-        const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString('base64')
-        const xVerify = crypto.createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
-        // Logging for debugging
-        console.log('PhonePe Payload:', payload)
-        console.log('PhonePe Payload Base64:', payloadBase64)
-        console.log('PhonePe X-VERIFY:', xVerify)
-        console.log('PhonePe Headers:', {
-            'Content-Type': 'application/json',
-            'X-VERIFY': xVerify,
-            'X-MERCHANT-ID': merchantId
-        })
-        // Log merchantId and saltKey for debugging
-        console.log('PhonePe merchantId:', merchantId)
-        console.log('PhonePe saltKey:', saltKey)
+        };
+        const newPurchase = await Purchase.create(purchaseData);
+        // PhonePe SDK Payment Initiation
+        const client = StandardCheckoutClient.getInstance(clientId, clientSecret, clientVersion, env);
+        const merchantOrderId = newPurchase._id.toString();
+        const amount = Math.floor(newPurchase.amount * 100); // in paise
+        const redirectUrl = `${origin}/loading/my-enrollments`;
+        const metaInfo = MetaInfo.builder()
+            .udf1(userId)
+            .udf2(courseData._id.toString())
+            .build();
+        const request = StandardCheckoutPayRequest.builder()
+            .merchantOrderId(merchantOrderId)
+            .amount(amount)
+            .redirectUrl(redirectUrl)
+            .metaInfo(metaInfo)
+            .build();
         try {
-            const response = await axios.post(
-                `${baseUrl}/pg/v1/pay`,
-                { request: payloadBase64 },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-VERIFY': xVerify,
-                        'X-MERCHANT-ID': merchantId
-                    }
-                }
-            )
-            console.log('PhonePe Response:', response.data)
-            if (response.data.success && response.data.data && response.data.data.instrumentResponse && response.data.data.instrumentResponse.redirectInfo && response.data.data.instrumentResponse.redirectInfo.url) {
-                res.json({ success: true, session_url: response.data.data.instrumentResponse.redirectInfo.url })
+            const response = await client.pay(request);
+            console.log('PhonePe SDK Response:', response);
+            if (response && response.redirectUrl) {
+                res.json({ success: true, session_url: response.redirectUrl });
             } else {
-                res.json({ success: false, message: 'PhonePe payment initiation failed', details: response.data })
+                res.json({ success: false, message: 'PhonePe payment initiation failed', details: response });
             }
-        } catch (phonepeError) {
-            console.error('PhonePe Error Response:', phonepeError.response ? phonepeError.response.data : phonepeError.message)
-            res.status(400).json({ success: false, message: 'PhonePe API error', details: phonepeError.response ? phonepeError.response.data : phonepeError.message })
+        } catch (sdkError) {
+            console.error('PhonePe SDK Error:', sdkError);
+            res.status(400).json({ success: false, message: 'PhonePe SDK error', details: sdkError.message || sdkError });
         }
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
 }
 
