@@ -69,7 +69,11 @@ export const purchaseCourse = async (req, res) => {
             const response = await client.pay(request);
             console.log('PhonePe SDK Response:', response);
             if (response && response.redirectUrl) {
-                res.json({ success: true, session_url: response.redirectUrl });
+                res.json({ 
+                    success: true, 
+                    session_url: response.redirectUrl,
+                    purchaseId: newPurchase._id.toString() // Return purchaseId for test completion
+                });
             } else {
                 res.json({ success: false, message: 'PhonePe payment initiation failed', details: response });
             }
