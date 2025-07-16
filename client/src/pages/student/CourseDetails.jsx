@@ -226,31 +226,6 @@ const CourseDetails = () => {
             <button onClick={enrollCourse} className="md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium">
               {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
             </button>
-            
-            {/* Temporary Test Payment Completion Button */}
-            {localStorage.getItem('test_purchaseId') && (
-              <button 
-                onClick={async () => {
-                  const testPurchaseId = localStorage.getItem('test_purchaseId');
-                  try {
-                    const response = await axios.post(`${backendUrl}/api/user/manual-test-complete`, { 
-                      purchaseId: testPurchaseId 
-                    });
-                    if (response.data.success) {
-                      toast.success('Test enrollment completed!');
-                      localStorage.removeItem('test_purchaseId');
-                      // Refresh the page or update enrollment status
-                      window.location.reload();
-                    }
-                  } catch (error) {
-                    toast.error('Failed to complete test payment');
-                  }
-                }}
-                className="md:mt-3 mt-2 w-full py-2 rounded bg-green-600 text-white font-medium"
-              >
-                Complete Test Payment
-              </button>
-            )}
             <div className="pt-6">
               <p className="md:text-xl text-lg font-medium text-gray-800">What's in the course?</p>
               <ul className="ml-4 pt-2 text-sm md:text-default list-disc text-gray-500">
