@@ -61,22 +61,37 @@ export const purchaseCourse = async (req, res) => {
             }
         }
         const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString('base64')
-        const xVerify = crypto.createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
-        const response = await axios.post(
-            `${baseUrl}/pg/v1/pay`,
-            { request: payloadBase64 },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-VERIFY': xVerify,
-                    'X-MERCHANT-ID': merchantId
+        const xVerify = require('crypto').createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
+        // Logging for debugging
+        console.log('PhonePe Payload:', payload)
+        console.log('PhonePe Payload Base64:', payloadBase64)
+        console.log('PhonePe X-VERIFY:', xVerify)
+        console.log('PhonePe Headers:', {
+            'Content-Type': 'application/json',
+            'X-VERIFY': xVerify,
+            'X-MERCHANT-ID': merchantId
+        })
+        try {
+            const response = await axios.post(
+                `${baseUrl}/pg/v1/pay`,
+                { request: payloadBase64 },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-VERIFY': xVerify,
+                        'X-MERCHANT-ID': merchantId
+                    }
                 }
+            )
+            console.log('PhonePe Response:', response.data)
+            if (response.data.success && response.data.data && response.data.data.instrumentResponse && response.data.data.instrumentResponse.redirectInfo && response.data.data.instrumentResponse.redirectInfo.url) {
+                res.json({ success: true, session_url: response.data.data.instrumentResponse.redirectInfo.url })
+            } else {
+                res.json({ success: false, message: 'PhonePe payment initiation failed', details: response.data })
             }
-        )
-        if (response.data.success && response.data.data && response.data.data.instrumentResponse && response.data.data.instrumentResponse.redirectInfo && response.data.data.instrumentResponse.redirectInfo.url) {
-            res.json({ success: true, session_url: response.data.data.instrumentResponse.redirectInfo.url })
-        } else {
-            res.json({ success: false, message: 'PhonePe payment initiation failed', details: response.data })
+        } catch (phonepeError) {
+            console.error('PhonePe Error Response:', phonepeError.response ? phonepeError.response.data : phonepeError.message)
+            res.status(400).json({ success: false, message: 'PhonePe API error', details: phonepeError.response ? phonepeError.response.data : phonepeError.message })
         }
     } catch (error) {
         res.json({ success: false, message: error.message })
