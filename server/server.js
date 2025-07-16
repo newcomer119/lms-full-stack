@@ -19,9 +19,9 @@ await connectCloudinary()
 // Middlewares
 app.use(cors({
   origin: [
-    'http://localhost:5173', // or whatever your local port is
+    'http://localhost:5173',
     'https://lms-full-stack-taupe-six.vercel.app',
-    'https://gurukul-classes-iota.vercel.app/'
+    'https://gurukul-classes-iota.vercel.app' // <-- no trailing slash
   ],
   credentials: true
 }))
