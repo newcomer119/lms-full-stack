@@ -2,8 +2,8 @@ import Course from "../models/Course.js"
 import { CourseProgress } from "../models/CourseProgress.js"
 import { Purchase } from "../models/Purchase.js"
 import User from "../models/User.js"
-import stripe from "stripe"
-
+import axios from "axios"
+import crypto from "crypto"
 
 
 // Get User Data
@@ -27,62 +27,59 @@ export const getUserData = async (req, res) => {
 
 // Purchase Course 
 export const purchaseCourse = async (req, res) => {
-
     try {
-
         const { courseId } = req.body
         const { origin } = req.headers
-
-
         const userId = req.auth.userId
-
         const courseData = await Course.findById(courseId)
         const userData = await User.findById(userId)
-
         if (!userData || !courseData) {
             return res.json({ success: false, message: 'Data Not Found' })
         }
-
         const purchaseData = {
             courseId: courseData._id,
             userId,
             amount: (courseData.coursePrice - courseData.discount * courseData.coursePrice / 100).toFixed(2),
         }
-
         const newPurchase = await Purchase.create(purchaseData)
-
-        // Stripe Gateway Initialize
-        const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
-
-        const currency = process.env.CURRENCY.toLocaleLowerCase()
-
-        // Creating line items to for Stripe
-        const line_items = [{
-            price_data: {
-                currency,
-                product_data: {
-                    name: courseData.courseTitle
-                },
-                unit_amount: Math.floor(newPurchase.amount) * 100
-            },
-            quantity: 1
-        }]
-
-        const session = await stripeInstance.checkout.sessions.create({
-            success_url: `${origin}/loading/my-enrollments`,
-            cancel_url: `${origin}/`,
-            line_items: line_items,
-            mode: 'payment',
-            metadata: {
-                purchaseId: newPurchase._id.toString()
+        // PhonePe Payment Initiation
+        const merchantId = process.env.PHONEPE_MERCHANT_ID || 'TEST-M23WZA4AO5BZG_25071'
+        const saltKey = process.env.PHONEPE_SALT_KEY || 'MzVmZjRiMGMtMTgxNC00ZjZhLTkyNGItMDc4ZTdmY2JmYTY4'
+        const baseUrl = 'https://api-preprod.phonepe.com/apis/pg-sandbox'
+        const amountPaise = Math.floor(newPurchase.amount * 100)
+        const redirectUrl = `${origin}/loading/my-enrollments`
+        const callbackUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/user/phonepe-webhook`
+        const payload = {
+            merchantId,
+            merchantTransactionId: newPurchase._id.toString(),
+            merchantUserId: userId,
+            amount: amountPaise,
+            redirectUrl,
+            callbackUrl,
+            paymentInstrument: {
+                type: 'PAY_PAGE'
             }
-        })
-
-        res.json({ success: true, session_url: session.url });
-
-
+        }
+        const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString('base64')
+        const xVerify = crypto.createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
+        const response = await axios.post(
+            `${baseUrl}/pg/v1/pay`,
+            { request: payloadBase64 },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-VERIFY': xVerify,
+                    'X-MERCHANT-ID': merchantId
+                }
+            }
+        )
+        if (response.data.success && response.data.data && response.data.data.instrumentResponse && response.data.data.instrumentResponse.redirectInfo && response.data.data.instrumentResponse.redirectInfo.url) {
+            res.json({ success: true, session_url: response.data.data.instrumentResponse.redirectInfo.url })
+        } else {
+            res.json({ success: false, message: 'PhonePe payment initiation failed', details: response.data })
+        }
     } catch (error) {
-        res.json({ success: false, message: error.message });
+        res.json({ success: false, message: error.message })
     }
 }
 
