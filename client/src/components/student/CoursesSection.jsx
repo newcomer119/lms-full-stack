@@ -11,7 +11,7 @@ const CoursesSection = () => {
     <div className="py-16 md:px-40 px-8">
       <h2 className="text-3xl font-medium text-gray-800">Learn from the best</h2>
       <p className="md:text-base text-sm text-gray-500 mt-3">
-        Discover our top-rated courses across various categories. From coding and design to business and wellness, our courses are crafted to deliver results.
+         Discover our top-rated courses for Class 9, 10, 11, and 12 (CBSE), as well as premier preparation for JEE Main, JEE Advanced, NDA, and other competitive exams. Our expertly designed programs are crafted to help you achieve academic excellence and exam success.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4 md:px-0 md:my-16 my-10 gap-4">
         {allCourses.slice(0, 4).map((course, index) => <CourseCard key={index} course={course} />)}

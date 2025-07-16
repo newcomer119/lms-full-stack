@@ -46,9 +46,13 @@ const Navbar = () => {
       <div className="md:flex hidden items-center gap-5 text-gray-500">
         <div className="flex items-center gap-5">
           {
+            user && isEducator && (
+              <button onClick={() => navigate('/educator')}>Educator Dashboard</button>
+            )
+          }
+          {
             user && <>
-              <button onClick={becomeEducator}>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
-              | <Link to='/my-enrollments' >My Enrollments</Link>
+              {isEducator && ' | '}<Link to='/my-enrollments' >My Enrollments</Link>
             </>
           }
         </div>
@@ -61,8 +65,12 @@ const Navbar = () => {
       {/* For Phone Screens */}
       <div className='md:hidden flex items-center gap-2 sm:gap-5 text-gray-500'>
         <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs">
-          <button onClick={becomeEducator}>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
-          | {
+          {
+            user && isEducator && <button onClick={() => navigate('/educator')}>Educator Dashboard</button>
+          }
+          {
+            user && isEducator && ' | '}
+          {
             user && <Link to='/my-enrollments' >My Enrollments</Link>
           }
         </div>

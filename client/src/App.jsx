@@ -15,6 +15,7 @@ import { ToastContainer } from 'react-toastify'
 import Player from './pages/student/Player'
 import MyEnrollments from './pages/student/MyEnrollments'
 import Loading from './components/student/Loading'
+import { Faculty } from './pages/student';
 
 const App = () => {
 
@@ -39,6 +40,7 @@ const App = () => {
           <Route path='my-courses' element={<MyCourses />} />
           <Route path='student-enrolled' element={<StudentsEnrolled />} />
         </Route>
+        <Route path="/faculty" element={<Faculty />} />
       </Routes>
     </div>
   )

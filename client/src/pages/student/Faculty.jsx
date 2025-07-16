@@ -1,6 +1,5 @@
 import React from 'react';
 import { assets, dummyTestimonial } from '../../assets/assets';
-import { useNavigate } from 'react-router-dom';
 
 const socialIcons = [
   assets.facebook_icon,
@@ -8,8 +7,7 @@ const socialIcons = [
   assets.instagram_icon
 ];
 
-const TestimonialsSection = () => {
-  const navigate = useNavigate();
+const Faculty = () => {
   return (
     <div className="pb-14 px-8 md:px-0">
       <h2 className="text-3xl font-medium text-gray-800">Our Faculty</h2>
@@ -17,7 +15,7 @@ const TestimonialsSection = () => {
         Meet our dedicated faculty and team who are committed to your success.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-14">
-        {dummyTestimonial.slice(0, 3).map((testimonial, index) => (
+        {dummyTestimonial.map((testimonial, index) => (
           <div
             key={index}
             className="text-left border border-gray-500/30 rounded-lg bg-white shadow-[0px_4px_15px_0px] shadow-black/5 overflow-hidden flex flex-col items-center px-6 py-8"
@@ -36,11 +34,8 @@ const TestimonialsSection = () => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center mt-8">
-        <button onClick={() => navigate('/faculty')} className="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">See All</button>
-      </div>
     </div>
   );
 }
 
-export default TestimonialsSection;
+export default Faculty; 
