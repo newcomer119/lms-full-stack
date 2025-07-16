@@ -96,4 +96,42 @@ export const manualTestComplete = async (req, res) => {
     console.error('Error in manualTestComplete:', error);
     res.status(500).json({ success: false, message: error.message });
   }
+}
+
+// Test endpoint to complete specific purchase (for immediate testing)
+export const completeSpecificPurchase = async (req, res) => {
+  try {
+    // Your specific purchase ID
+    const purchaseId = "6878218873504081288dc3e8";
+    console.log('Completing specific purchase:', purchaseId);
+    
+    const purchase = await Purchase.findById(purchaseId);
+    if (!purchase) {
+      return res.status(404).json({ success: false, message: 'Purchase not found' });
+    }
+    
+    purchase.status = 'completed';
+    await purchase.save();
+    
+    // Enroll user
+    const user = await User.findById(purchase.userId);
+    const course = await Course.findById(purchase.courseId);
+    
+    if (user && course) {
+      if (!user.enrolledCourses.includes(course._id)) {
+        user.enrolledCourses.push(course._id);
+        await user.save();
+      }
+      
+      if (!course.enrolledStudents.includes(user._id)) {
+        course.enrolledStudents.push(user._id);
+        await course.save();
+      }
+    }
+    
+    res.json({ success: true, message: 'Specific purchase completed and user enrolled' });
+  } catch (error) {
+    console.error('Error in completeSpecificPurchase:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 } 

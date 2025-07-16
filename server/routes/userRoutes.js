@@ -1,6 +1,6 @@
 import express from 'express'
 import { addUserRating, getUserCourseProgress, getUserData, purchaseCourse, updateUserCourseProgress, userEnrolledCourses } from '../controllers/userController.js';
-import { phonepeWebhook, manualTestComplete } from '../controllers/phonepeController.js'
+import { phonepeWebhook, manualTestComplete, completeSpecificPurchase } from '../controllers/phonepeController.js'
 
 
 const userRouter = express.Router()
@@ -14,5 +14,6 @@ userRouter.post('/get-course-progress', getUserCourseProgress)
 userRouter.post('/add-rating', addUserRating)
 userRouter.post('/phonepe-webhook', phonepeWebhook)
 userRouter.post('/manual-test-complete', manualTestComplete)
+userRouter.post('/complete-specific-purchase', completeSpecificPurchase)
 
 export default userRouter;
