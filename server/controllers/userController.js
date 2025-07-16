@@ -61,7 +61,7 @@ export const purchaseCourse = async (req, res) => {
             }
         }
         const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString('base64')
-        const xVerify = require('crypto').createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
+        const xVerify = crypto.createHash('sha256').update(payloadBase64 + '/pg/v1/pay' + saltKey).digest('hex') + '###1'
         // Logging for debugging
         console.log('PhonePe Payload:', payload)
         console.log('PhonePe Payload Base64:', payloadBase64)
