@@ -71,6 +71,9 @@ export const purchaseCourse = async (req, res) => {
             'X-VERIFY': xVerify,
             'X-MERCHANT-ID': merchantId
         })
+        // Log merchantId and saltKey for debugging
+        console.log('PhonePe merchantId:', merchantId)
+        console.log('PhonePe saltKey:', saltKey)
         try {
             const response = await axios.post(
                 `${baseUrl}/pg/v1/pay`,
