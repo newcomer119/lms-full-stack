@@ -21,7 +21,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173', // or whatever your local port is
     'https://lms-full-stack-taupe-six.vercel.app',
-    'https://lms-full-stack-v9oq.vercel.app/'
+    'https://gurukul-classes-iota.vercel.app/'
   ],
   credentials: true
 }))
