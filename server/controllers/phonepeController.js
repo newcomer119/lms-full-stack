@@ -49,25 +49,51 @@ export const phonepeWebhook = async (req, res) => {
 export const manualTestComplete = async (req, res) => {
   try {
     const { purchaseId } = req.body;
+    console.log('Manual test complete called with purchaseId:', purchaseId);
+    
     const purchase = await Purchase.findById(purchaseId);
-    if (!purchase) return res.status(404).json({ success: false, message: 'Purchase not found' });
+    if (!purchase) {
+      console.log('Purchase not found for ID:', purchaseId);
+      return res.status(404).json({ success: false, message: 'Purchase not found' });
+    }
+    
+    console.log('Found purchase:', purchase);
+    console.log('Current status:', purchase.status);
+    
     purchase.status = 'completed';
     await purchase.save();
+    console.log('Purchase status updated to completed');
+    
     // Enroll user
     const user = await User.findById(purchase.userId);
     const course = await Course.findById(purchase.courseId);
+    
+    console.log('User found:', user ? 'Yes' : 'No');
+    console.log('Course found:', course ? 'Yes' : 'No');
+    
     if (user && course) {
+      console.log('User enrolled courses before:', user.enrolledCourses);
+      console.log('Course enrolled students before:', course.enrolledStudents);
+      
       if (!user.enrolledCourses.includes(course._id)) {
         user.enrolledCourses.push(course._id);
         await user.save();
+        console.log('User enrolled in course');
       }
+      
       if (!course.enrolledStudents.includes(user._id)) {
         course.enrolledStudents.push(user._id);
         await course.save();
+        console.log('Course updated with enrolled student');
       }
+      
+      console.log('User enrolled courses after:', user.enrolledCourses);
+      console.log('Course enrolled students after:', course.enrolledStudents);
     }
-    res.json({ success: true });
+    
+    res.json({ success: true, message: 'Test payment completed and user enrolled' });
   } catch (error) {
+    console.error('Error in manualTestComplete:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 } 
