@@ -5,7 +5,7 @@ export default {
     fields: [
       {
         name: 'index',
-        index : 'index',
+        index : 'Index',
         type: 'number',
       },
       {

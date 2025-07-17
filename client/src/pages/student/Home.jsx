@@ -6,6 +6,7 @@ import CoursesSection from '../../components/student/CoursesSection';
 import TestimonialsSection from '../../components/student/TestimonialsSection';
 import CallToAction from '../../components/student/CallToAction';
 import ContactUs from '../../components/student/ContactUs';
+import GallerySlider from '../../components/student/GallerySlider';
 
 const Home = () => {
 
@@ -14,6 +15,7 @@ const Home = () => {
       <Hero />
       <CoursesSection />
       <TestimonialsSection />
+      <GallerySlider />
       <div id="contact-us">
         <ContactUs />
       </div>
