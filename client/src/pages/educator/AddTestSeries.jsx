@@ -20,61 +20,32 @@ const AddTestSeries = () => {
   });
   const [uploading, setUploading] = useState(false);
 
-  // Helper to upload image to backend/cloudinary
+  // Upload image to backend /api/educator/upload-image
   const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
-    // Use a dummy endpoint that uploads and returns the URL (reuse add-course logic)
-    // We'll POST to /api/educator/add-course with a dummy courseData
-    // and just get the image URL from the response
-    // Or, if you have a dedicated upload endpoint, use that
     try {
-      const token = await getToken();
-      // We'll use a dedicated endpoint for image upload if available
-      // For now, let's POST to /api/educator/add-course with minimal data
-      // and get the uploaded image URL from the response
-      // (You may want to create a dedicated /api/upload endpoint in the future)
-      formData.append('courseData', JSON.stringify({ courseTitle: 'temp', courseDescription: 'temp', coursePrice: 1, discount: 0, courseContent: [], educator: 'temp' }));
       const { data } = await axios.post(
-        backendUrl + '/api/educator/add-course',
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        backendUrl + '/api/educator/upload-image',
+        formData
       );
-      if (data.success && data.message === 'Course Added') {
-        // The backend returns the new course, but we only want the image URL
-        // We'll extract the image URL from the response if possible
-        // But since the backend doesn't return the image URL directly, you should ideally have a dedicated upload endpoint
-        // For now, this is a workaround
-        // You may want to implement a /api/upload endpoint that just uploads and returns the URL
-        // For now, return null
-        return null;
+      if (data.success && data.url) {
+        return data.url;
       }
-      return null;
+      return '';
     } catch (error) {
-      return null;
+      toast.error('Failed to upload image');
+      return '';
     }
   };
 
-  // New: Upload question image before adding question
+  // Upload question image before adding question
   const handleAddQuestion = async () => {
     setUploading(true);
     let imageUrl = '';
     if (currentQuestion.image) {
-      // Upload image to Cloudinary/backend and get URL
-      const formData = new FormData();
-      formData.append('image', currentQuestion.image);
-      try {
-        // You should have a dedicated upload endpoint, e.g. /api/upload
-        // For now, let's use Cloudinary directly (if you have credentials)
-        // Or, skip image upload if not possible
-        // This is a placeholder for actual upload logic
-        // imageUrl = await uploadImage(currentQuestion.image);
-        // For now, skip and show error if not possible
-        toast.error('Image upload for questions is not implemented. Please add a dedicated upload endpoint.');
-        setUploading(false);
-        return;
-      } catch (err) {
-        toast.error('Failed to upload question image');
+      imageUrl = await uploadImage(currentQuestion.image);
+      if (!imageUrl) {
         setUploading(false);
         return;
       }
@@ -180,7 +151,7 @@ const AddTestSeries = () => {
               <div className="mb-2">
                 <p>Question Image (optional)</p>
                 <input type="file" accept="image/*" onChange={e => setCurrentQuestion({ ...currentQuestion, image: e.target.files[0] })} />
-                {currentQuestion.image && <img src={URL.createObjectURL(currentQuestion.image)} alt='' className='max-h-24 mt-2' />}
+                {currentQuestion.image && <img src={typeof currentQuestion.image === 'string' ? currentQuestion.image : URL.createObjectURL(currentQuestion.image)} alt='' className='max-h-24 mt-2' />}
               </div>
               <div className="mb-2">
                 <p>Options</p>
