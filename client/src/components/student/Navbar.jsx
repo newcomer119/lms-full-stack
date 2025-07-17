@@ -42,20 +42,36 @@ const Navbar = () => {
 
   return (
     <div className={"flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b border-gray-500 py-4 bg-white"}>
+      {/* Logo Left */}
       <img onClick={() => navigate('/')} src={assets.fileicon} alt="Logo" className="w-28 lg:w-32 cursor-pointer" />
-      <div className="md:flex hidden items-center gap-5 text-gray-500">
-        <div className="flex items-center gap-5">
-          {
-            user && isEducator && (
-              <button onClick={() => navigate('/educator')}>Educator Dashboard</button>
-            )
-          }
-          {
-            user && <>
-              {isEducator && ' | '}<Link to='/my-enrollments' >My Enrollments</Link>
-            </>
-          }
+      {/* Centered Nav Links */}
+      <div className="flex-1 flex justify-center">
+        <div className="flex items-center gap-8 text-gray-500">
+          <Link to="/">Home</Link>
+          <Link to="/about-us">About Us</Link>
+          <Link to="/test-series">Test Series</Link>
+          <button onClick={() => {
+            if (location.pathname === '/') {
+              const el = document.getElementById('contact-us');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              navigate('/');
+              setTimeout(() => {
+                const el = document.getElementById('contact-us');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 300);
+            }
+          }}>Contact Us</button>
         </div>
+      </div>
+      {/* Right Section */}
+      <div className="flex items-center gap-5 text-gray-500">
+        {user && isEducator && (
+          <button onClick={() => navigate('/educator')}>Educator Dashboard</button>
+        )}
+        {user && <>
+          {isEducator && ' | '}<Link to='/my-enrollments' >My Enrollments</Link>
+        </>}
         {user
           ? <UserButton />
           : <button onClick={() => openSignIn()} className="bg-blue-600 text-white px-5 py-2 rounded-full">
@@ -63,17 +79,29 @@ const Navbar = () => {
           </button>}
       </div>
       {/* For Phone Screens */}
-      <div className='md:hidden flex items-center gap-2 sm:gap-5 text-gray-500'>
-        <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs">
-          {
-            user && isEducator && <button onClick={() => navigate('/educator')}>Educator Dashboard</button>
-          }
-          {
-            user && isEducator && ' | '}
-          {
-            user && <Link to='/my-enrollments' >My Enrollments</Link>
-          }
+      <div className='md:hidden flex-1 flex justify-center items-center gap-2 sm:gap-5 text-gray-500'>
+        <div className="flex items-center gap-2 sm:gap-4 max-sm:text-xs">
+          <Link to="/">Home</Link>
+          <Link to="/about-us">About Us</Link>
+          <Link to="/test-series">Test Series</Link>
+          <button onClick={() => {
+            if (location.pathname === '/') {
+              const el = document.getElementById('contact-us');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              navigate('/');
+              setTimeout(() => {
+                const el = document.getElementById('contact-us');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 300);
+            }
+          }}>Contact Us</button>
         </div>
+      </div>
+      <div className='md:hidden flex items-center gap-2'>
+        {user && isEducator && <button onClick={() => navigate('/educator')}>Educator Dashboard</button>}
+        {user && isEducator && ' | '}
+        {user && <Link to='/my-enrollments' >My Enrollments</Link>}
         {user
           ? <UserButton />
           : <button onClick={() => openSignIn()}>

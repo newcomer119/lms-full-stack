@@ -14,7 +14,9 @@ const Home = () => {
       <Hero />
       <CoursesSection />
       <TestimonialsSection />
-      <ContactUs />
+      <div id="contact-us">
+        <ContactUs />
+      </div>
       <CallToAction />
       <Footer />
     </div>

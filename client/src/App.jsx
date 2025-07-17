@@ -16,6 +16,8 @@ import Player from './pages/student/Player'
 import MyEnrollments from './pages/student/MyEnrollments'
 import Loading from './components/student/Loading'
 import { Faculty } from './pages/student';
+import AboutUs from './pages/AboutUs';
+import TestSeries from './pages/TestSeries';
 
 const App = () => {
 
@@ -41,6 +43,8 @@ const App = () => {
           <Route path='student-enrolled' element={<StudentsEnrolled />} />
         </Route>
         <Route path="/faculty" element={<Faculty />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/test-series" element={<TestSeries />} />
       </Routes>
     </div>
   )
