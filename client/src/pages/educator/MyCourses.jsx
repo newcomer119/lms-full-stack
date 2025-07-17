@@ -3,12 +3,14 @@ import { AppContext } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
+import AddCourse from './AddCourse';
 
 const MyCourses = () => {
 
   const { backendUrl, isEducator, currency, getToken } = useContext(AppContext)
 
   const [courses, setCourses] = useState(null)
+  const [editingCourse, setEditingCourse] = useState(null);
 
   const fetchEducatorCourses = async () => {
 
@@ -44,6 +46,7 @@ const MyCourses = () => {
                 <th className="px-4 py-3 font-semibold truncate">Earnings</th>
                 <th className="px-4 py-3 font-semibold truncate">Students</th>
                 <th className="px-4 py-3 font-semibold truncate">Published On</th>
+                <th className="px-4 py-3 font-semibold truncate">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm text-gray-500">
@@ -58,12 +61,25 @@ const MyCourses = () => {
                   <td className="px-4 py-3">
                     {new Date(course.createdAt).toLocaleDateString()}
                   </td>
+                  <td className="px-4 py-3">
+                    <button className="bg-blue-500 text-white px-3 py-1 rounded" onClick={() => setEditingCourse(course)}>Edit</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+      {editingCourse && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl relative">
+            <button className="absolute top-2 right-2 text-gray-500" onClick={() => setEditingCourse(null)}>X</button>
+            {/* The EditCourse component will be implemented to handle editing */}
+            {/* <EditCourse course={editingCourse} onClose={() => setEditingCourse(null)} onSave={fetchEducatorCourses} /> */}
+            <div>Edit form goes here</div>
+          </div>
+        </div>
+      )}
     </div>
   ) : <Loading />
 };

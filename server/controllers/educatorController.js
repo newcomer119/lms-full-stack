@@ -159,3 +159,43 @@ export const getEnrolledStudentsData = async (req, res) => {
         });
     }
 };
+
+// Edit Course
+export const editCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const educatorId = req.auth.userId;
+        const { courseData } = req.body;
+        const imageFile = req.file;
+
+        // Find the course and check ownership
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+        if (course.educator !== educatorId) {
+            return res.status(403).json({ success: false, message: 'Unauthorized' });
+        }
+
+        // Parse course data
+        const parsedCourseData = JSON.parse(courseData);
+
+        // Update fields
+        course.courseTitle = parsedCourseData.courseTitle;
+        course.courseDescription = parsedCourseData.courseDescription;
+        course.coursePrice = Number(parsedCourseData.coursePrice);
+        course.discount = Number(parsedCourseData.discount);
+        course.courseContent = parsedCourseData.courseContent;
+
+        // If a new image is uploaded, update thumbnail
+        if (imageFile) {
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path);
+            course.courseThumbnail = imageUpload.secure_url;
+        }
+
+        await course.save();
+        res.json({ success: true, message: 'Course updated successfully' });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
