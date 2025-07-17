@@ -199,3 +199,17 @@ export const editCourse = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+
+// Upload Image (for test series/question images)
+export const uploadImage = async (req, res) => {
+    try {
+        const imageFile = req.file;
+        if (!imageFile) {
+            return res.status(400).json({ success: false, message: 'No image file provided' });
+        }
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path);
+        res.json({ success: true, url: imageUpload.secure_url });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

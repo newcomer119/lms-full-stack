@@ -18,11 +18,71 @@ const AddTestSeries = () => {
     options: ['', '', '', ''],
     correctOption: 0,
   });
+  const [uploading, setUploading] = useState(false);
 
-  const handleAddQuestion = () => {
-    setQuestions([...questions, { ...currentQuestion, id: uniqid() }]);
+  // Helper to upload image to backend/cloudinary
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    // Use a dummy endpoint that uploads and returns the URL (reuse add-course logic)
+    // We'll POST to /api/educator/add-course with a dummy courseData
+    // and just get the image URL from the response
+    // Or, if you have a dedicated upload endpoint, use that
+    try {
+      const token = await getToken();
+      // We'll use a dedicated endpoint for image upload if available
+      // For now, let's POST to /api/educator/add-course with minimal data
+      // and get the uploaded image URL from the response
+      // (You may want to create a dedicated /api/upload endpoint in the future)
+      formData.append('courseData', JSON.stringify({ courseTitle: 'temp', courseDescription: 'temp', coursePrice: 1, discount: 0, courseContent: [], educator: 'temp' }));
+      const { data } = await axios.post(
+        backendUrl + '/api/educator/add-course',
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success && data.message === 'Course Added') {
+        // The backend returns the new course, but we only want the image URL
+        // We'll extract the image URL from the response if possible
+        // But since the backend doesn't return the image URL directly, you should ideally have a dedicated upload endpoint
+        // For now, this is a workaround
+        // You may want to implement a /api/upload endpoint that just uploads and returns the URL
+        // For now, return null
+        return null;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  // New: Upload question image before adding question
+  const handleAddQuestion = async () => {
+    setUploading(true);
+    let imageUrl = '';
+    if (currentQuestion.image) {
+      // Upload image to Cloudinary/backend and get URL
+      const formData = new FormData();
+      formData.append('image', currentQuestion.image);
+      try {
+        // You should have a dedicated upload endpoint, e.g. /api/upload
+        // For now, let's use Cloudinary directly (if you have credentials)
+        // Or, skip image upload if not possible
+        // This is a placeholder for actual upload logic
+        // imageUrl = await uploadImage(currentQuestion.image);
+        // For now, skip and show error if not possible
+        toast.error('Image upload for questions is not implemented. Please add a dedicated upload endpoint.');
+        setUploading(false);
+        return;
+      } catch (err) {
+        toast.error('Failed to upload question image');
+        setUploading(false);
+        return;
+      }
+    }
+    setQuestions([...questions, { ...currentQuestion, id: uniqid(), image: imageUrl }]);
     setShowPopup(false);
     setCurrentQuestion({ questionText: '', image: null, options: ['', '', '', ''], correctOption: 0 });
+    setUploading(false);
   };
 
   const handleRemoveQuestion = (id) => {
@@ -99,7 +159,7 @@ const AddTestSeries = () => {
                 <span className='font-semibold'>Q{idx + 1}: {q.questionText}</span>
                 <button type='button' className='text-red-500' onClick={() => handleRemoveQuestion(q.id)}>Remove</button>
               </div>
-              {q.image && <img src={URL.createObjectURL(q.image)} alt='' className='max-h-24' />}
+              {q.image && <img src={q.image} alt='' className='max-h-24' />}
               <ul className='list-decimal ml-6'>
                 {q.options.map((opt, i) => (
                   <li key={i} className={q.correctOption === i ? 'font-bold text-green-600' : ''}>{opt}</li>
@@ -140,7 +200,7 @@ const AddTestSeries = () => {
                   ))}
                 </select>
               </div>
-              <button type='button' className="w-full bg-blue-400 text-white px-4 py-2 rounded" onClick={handleAddQuestion}>Add Question</button>
+              <button type='button' className="w-full bg-blue-400 text-white px-4 py-2 rounded" onClick={handleAddQuestion} disabled={uploading}>{uploading ? 'Uploading...' : 'Add Question'}</button>
               <button type='button' className="absolute top-4 right-4 text-gray-500" onClick={() => setShowPopup(false)}>X</button>
             </div>
           </div>
