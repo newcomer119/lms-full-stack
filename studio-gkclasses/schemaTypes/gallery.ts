@@ -4,9 +4,9 @@ export default {
     type: 'document',
     fields: [
       {
-        name: 'title',
-        title: 'Title',
-        type: 'string',
+        name: 'index',
+        index : 'index',
+        type: 'number',
       },
       {
         name: 'image',
@@ -15,11 +15,6 @@ export default {
         options: {
           hotspot: true,
         },
-      },
-      {
-        name: 'description',
-        title: 'Description',
-        type: 'text',
       },
       {
         name: 'createdAt',
