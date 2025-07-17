@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
 import AddCourse from './AddCourse';
+import EditCourse from './EditCourse';
 
 const MyCourses = () => {
 
@@ -74,9 +75,7 @@ const MyCourses = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl relative">
             <button className="absolute top-2 right-2 text-gray-500" onClick={() => setEditingCourse(null)}>X</button>
-            {/* The EditCourse component will be implemented to handle editing */}
-            {/* <EditCourse course={editingCourse} onClose={() => setEditingCourse(null)} onSave={fetchEducatorCourses} /> */}
-            <div>Edit form goes here</div>
+            <EditCourse course={editingCourse} onClose={() => setEditingCourse(null)} onSave={fetchEducatorCourses} />
           </div>
         </div>
       )}
