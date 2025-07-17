@@ -18,6 +18,7 @@ import Loading from './components/student/Loading'
 import { Faculty } from './pages/student';
 import AboutUs from './pages/AboutUs';
 import TestSeries from './pages/TestSeries';
+import AddTestSeries from './pages/educator/AddTestSeries';
 
 const App = () => {
 
@@ -39,6 +40,7 @@ const App = () => {
         <Route path='/educator' element={<Educator />}>
           <Route path='/educator' element={<Dashboard />} />
           <Route path='add-course' element={<AddCourse />} />
+          <Route path='add-testseries' element={<AddTestSeries />} />
           <Route path='my-courses' element={<MyCourses />} />
           <Route path='student-enrolled' element={<StudentsEnrolled />} />
         </Route>
