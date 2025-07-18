@@ -14,7 +14,7 @@ const Navbar = ({ bgColor }) => {
     <div className={`flex items-center justify-between px-4 md:px-8 border-b border-gray-500 py-3 ${bgColor} relative`}>
       {/* Logo Left */}
       <Link to="/">
-        <img src={assets.fileicon} alt="Logo" className="w-28 lg:w-32 z-20" />
+        <img src={assets.gclogo} alt="Logo" className="w-28 lg:w-32 z-20" />
       </Link>
       {/* Hamburger for mobile */}
       <div className="flex items-center md:hidden z-20">

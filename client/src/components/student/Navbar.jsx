@@ -45,7 +45,7 @@ const Navbar = () => {
   return (
     <div className={"flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b border-gray-500 py-4 bg-white relative"}>
       {/* Logo Left */}
-      <img onClick={() => navigate('/')} src={assets.fileicon} alt="Logo" className="w-28 lg:w-32 cursor-pointer z-20" />
+      <img onClick={() => navigate('/')} src={assets.gclogo} alt="Logo" className="w-28 lg:w-32 cursor-pointer z-20" />
       {/* Hamburger for mobile */}
       <div className="flex items-center md:hidden z-20">
         <button onClick={() => setMenuOpen(!menuOpen)}>
