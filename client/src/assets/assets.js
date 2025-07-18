@@ -43,11 +43,13 @@ import profile_img2 from './profile_img2.png'
 import profile_img3 from './profile_img3.png'
 import lesson_icon from './lesson_icon.svg'
 import gclogo from './gclogo.jpg'
+import gcdarklogo from './gcdarklogo.png'
 
 
 export const assets = {
     logo,
     gclogo,
+    gcdarklogo,
     search_icon,
     sketch,
     microsoft_logo,
