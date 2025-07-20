@@ -1,7 +1,9 @@
 import React from "react";
 import { assets } from "../../assets/assets";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-full min-h-[80vh] flex flex-col md:flex-row items-center justify-between px-4 md:px-20 pt-24 pb-12 bg-white relative overflow-hidden">
       {/* Left: Text Content */}
@@ -29,11 +31,11 @@ const Hero = () => {
         </p>
         {/* Buttons */}
         <div className="flex flex-col md:flex-row gap-4 mb-4 justify-start items-start">
-          <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-md shadow transition text-lg">
-            START FREE TRIAL
-          </button>
-          <button className="border-2 border-yellow-400 text-yellow-400 font-bold px-8 py-4 rounded-md shadow transition hover:bg-yellow-400 hover:text-blue-900 text-lg">
-            VIEW RESULTS
+          <button
+            className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-md shadow transition text-lg"
+            onClick={() => navigate('/courses')}
+          >
+            Courses
           </button>
         </div>
       </div>
