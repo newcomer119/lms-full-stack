@@ -37,39 +37,13 @@ const Hero = () => {
           </button>
         </div>
       </div>
-      {/* Right: Video Card */}
+      {/* Right: Founder Image */}
       <div className="flex-1 flex items-center justify-center w-full md:w-1/2 mt-2 md:mt-0 mb-8 md:mb-0">
-        <div className="relative bg-white rounded-2xl shadow-2xl p-4 md:p-6 w-full max-w-md flex flex-col items-center">
-          <div className="relative w-full h-40 md:h-56 rounded-xl overflow-hidden flex items-center justify-center">
-            <img
-              src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80"
-              alt="Success Story"
-              className="w-full h-full object-cover opacity-90"
-            />
-            <button className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-gradient-to-br from-orange-400 to-pink-500 rounded-full p-4 shadow-lg">
-                <svg
-                  className="w-10 h-10 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </span>
-            </button>
-            <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-              Watch Success Stories
-            </span>
-          </div>
-          <div className="pt-2 mt-1 text-center">
-            <span className="text-blue-900 font-bold text-base md:text-lg">
-              From Dreams to IIT/AIIMS
-            </span>
-            <p className="text-blue-700 text-xs md:text-sm mt-1">
-              Watch how our students achieved their goals with expert guidance
-            </p>
-          </div>
-        </div>
+        <img
+          src="https://i.ibb.co/jZ5fpZpb/teacherimage.jpg"
+          alt="Founder and Lead Educator - The Gurukul Classes"
+          className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl object-cover"
+        />
       </div>
       {/* Stats at the bottom */}
       <div className="w-full flex flex-wrap gap-6 mt-24 justify-center items-center mb-4 md:mb-0 md:absolute md:bottom-8 left-0 px-4 md:px-20">
