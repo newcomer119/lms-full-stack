@@ -33,7 +33,7 @@ const Hero = () => {
         <div className="flex flex-col md:flex-row gap-4 mb-4 justify-start items-start">
           <button
             className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-md shadow transition text-lg"
-            onClick={() => navigate('/courses')}
+            onClick={() => navigate('/course-list')}
           >
             Courses
           </button>
@@ -48,7 +48,7 @@ const Hero = () => {
         />
       </div>
       {/* Stats at the bottom */}
-      <div className="w-full flex flex-wrap gap-6 mt-24 justify-center items-center mb-4 md:mb-0 md:absolute md:bottom-8 left-0 px-4 md:px-20">
+      <div className="w-full flex flex-wrap gap-6 mt-32 justify-center items-center mb-4 md:mb-0 md:absolute md:bottom-8 left-0 px-4 md:px-20">
         <div className="bg-blue-100 rounded-lg px-8 py-6 flex flex-col items-center min-w-[140px] shadow">
           <span className="text-yellow-400 text-3xl font-bold">99.2%</span>
           <span className="text-blue-900 text-base mt-1 font-semibold">
