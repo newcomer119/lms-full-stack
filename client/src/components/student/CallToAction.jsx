@@ -22,21 +22,7 @@ const CallToAction = () => {
           onClick={handleYouTubeClick}
         >
           <div className='relative overflow-hidden rounded-lg shadow-lg'>
-            {/* Placeholder for YouTube thumbnail - replace with actual thumbnail */}
-            <div className='w-full h-64 bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center'>
-              <div className='text-white text-center'>
-                <div className='text-6xl mb-4'>▶️</div>
-                <p className='text-lg font-semibold'>Watch Our Latest Videos</p>
-                <p className='text-sm opacity-90'>Click to visit our YouTube channel</p>
-              </div>
-            </div>
             
-
-            
-            {/* YouTube logo */}
-            <div className='absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold'>
-              YouTube
-            </div>
           </div>
           
           {/* Video description */}
