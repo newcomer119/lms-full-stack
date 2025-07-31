@@ -9,19 +9,6 @@ const CallToAction = () => {
 
   return (
     <div className='flex flex-col items-center gap-8 pt-10 pb-24 px-8 md:px-0'>
-      {/* Original CTA Section */}
-      <div className='flex flex-col items-center gap-4'>
-        <h1 className='md:text-4xl text-xl text-gray-800 font-semibold'>Learn anything, anytime, anywhere</h1>
-        <p className='text-gray-500 sm:text-sm'>Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam aliqua proident excepteur commodo do ea.</p>
-        <div className='flex items-center font-medium gap-6 mt-4'>
-          <button className='px-10 py-3 rounded-md text-white bg-blue-600'>Get started</button>
-          <button className='flex items-center gap-2'>
-            Learn more
-            <img src={assets.arrow_icon} alt="arrow_icon" />
-          </button>
-        </div>
-      </div>
-
       {/* YouTube Channel Subscription Section */}
       <div className='flex flex-col items-center gap-6 w-full max-w-4xl'>
         <div className='text-center'>
@@ -44,14 +31,7 @@ const CallToAction = () => {
               </div>
             </div>
             
-            {/* Play button overlay */}
-            <div className='absolute inset-0 flex items-center justify-center'>
-              <div className='bg-white bg-opacity-90 rounded-full p-4 group-hover:bg-opacity-100 transition-all duration-300'>
-                <svg className='w-12 h-12 text-red-600' fill='currentColor' viewBox='0 0 24 24'>
-                  <path d='M8 5v14l11-7z'/>
-                </svg>
-              </div>
-            </div>
+
             
             {/* YouTube logo */}
             <div className='absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold'>
