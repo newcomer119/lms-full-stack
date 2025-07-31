@@ -19,6 +19,9 @@ import { Faculty } from './pages/student';
 import AboutUs from './pages/AboutUs';
 import TestSeries from './pages/TestSeries';
 import AddTestSeries from './pages/educator/AddTestSeries';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
+import TermsConditions from './pages/TermsConditions';
 
 const App = () => {
 
@@ -47,6 +50,9 @@ const App = () => {
         <Route path="/faculty" element={<Faculty />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/test-series" element={<TestSeries />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
       </Routes>
     </div>
   )
