@@ -11,28 +11,6 @@ const CallToAction = () => {
     <div className='flex flex-col items-center gap-8 pt-10 pb-24 px-8 md:px-0'>
       {/* YouTube Channel Subscription Section */}
       <div className='flex flex-col items-center gap-6 w-full max-w-4xl'>
-        <div className='text-center'>
-          <h2 className='md:text-3xl text-xl text-gray-800 font-semibold mb-3'>Subscribe to Our YouTube Channel</h2>
-          <p className='text-gray-600 text-sm md:text-base'>Watch videos to crack competitive exams and enhance your learning</p>
-        </div>
-        
-        {/* YouTube Video Box */}
-        <div 
-          className='relative w-full max-w-2xl cursor-pointer group'
-          onClick={handleYouTubeClick}
-        >
-          <div className='relative overflow-hidden rounded-lg shadow-lg'>
-            
-          </div>
-          
-          {/* Video description */}
-          <div className='mt-4 text-center'>
-            <h3 className='text-lg font-semibold text-gray-800 mb-2'>Competitive Exam Preparation</h3>
-            <p className='text-gray-600 text-sm'>Get expert tips, strategies, and solutions for JEE, NEET, and other competitive exams</p>
-          </div>
-        </div>
-        
-        {/* Subscribe button */}
         <button 
           onClick={handleYouTubeClick}
           className='px-8 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition-colors duration-300 flex items-center gap-2'
