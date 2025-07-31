@@ -64,6 +64,7 @@ const Navbar = () => {
         <div className="flex items-center gap-8 text-gray-500">
           <Link to="/">Home</Link>
           <Link to="/about-us">About Us</Link>
+          <Link to="/course-list">Courses</Link>
           <Link to="/test-series">Test Series</Link>
           <button onClick={() => {
             if (location.pathname === '/') {
@@ -105,6 +106,7 @@ const Navbar = () => {
         <div className="flex flex-col items-center gap-6 mt-20 text-gray-700 text-lg">
           <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/about-us" onClick={() => setMenuOpen(false)}>About Us</Link>
+          <Link to="/course-list" onClick={() => setMenuOpen(false)}>Courses</Link>
           <Link to="/test-series" onClick={() => setMenuOpen(false)}>Test Series</Link>
           <button onClick={() => {
             setMenuOpen(false);
