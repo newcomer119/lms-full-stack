@@ -23,7 +23,8 @@ app.use(cors({
     'http://localhost:5173',
     'https://lms-full-stack-taupe-six.vercel.app',
     'https://gurukul-classes-iota.vercel.app',
-    'https://lms-full-stack-ku7w.vercel.app' // <-- no trailing slash
+    'https://lms-full-stack-ku7w.vercel.app',
+    'https://thegurukulclasses.com' // <-- no trailing slash
   ],
   credentials: true
 }))
