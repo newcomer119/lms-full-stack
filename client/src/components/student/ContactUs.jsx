@@ -26,7 +26,7 @@ const ContactUs = () => {
               <span className="text-blue-600 text-xl mt-1">📍</span>
               <div>
                 <span className="font-semibold">Address</span>
-                <p className="text-gray-700 text-sm">Katra, Prayagraj, India</p>
+                <p className="text-gray-700 text-sm">Katra & Sarai Akil Kaushambi Prayagraj, India</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
