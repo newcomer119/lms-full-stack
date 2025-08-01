@@ -39,13 +39,29 @@ const Hero = () => {
           </button>
         </div>
       </div>
-      {/* Right: Founder Image */}
-      <div className="flex-1 flex items-center justify-center w-full md:w-1/2 mt-2 md:mt-0 mb-8 md:mb-0">
+      {/* Right: Founder Image and Message */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full md:w-1/2 mt-2 md:mt-0 mb-8 md:mb-0">
         <img
           src="https://i.ibb.co/jZ5fpZpb/teacherimage.jpg"
           alt="Founder and Lead Educator - The Gurukul Classes"
-          className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl object-cover"
+          className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl object-cover mb-8"
         />
+        
+        {/* Founder's Message */}
+        <div className="bg-gradient-to-br from-blue-50 to-orange-50 rounded-2xl p-6 shadow-lg border border-blue-100 max-w-md w-full">
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-bold text-blue-800 mb-1">Vivek Pandey</h3>
+            <p className="text-orange-500 font-semibold text-base">Founder & Lead Educator</p>
+          </div>
+          <div className="relative">
+            <svg className="absolute -top-2 -left-2 w-6 h-6 text-orange-400 opacity-60" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+            </svg>
+            <p className="text-gray-700 text-base leading-relaxed italic font-medium">
+              "Our mission is to provide the best guidance to students for both academic excellence and career success in competitive fields like IIT, NEET, NDA, and more. With dedication and discipline, every student can achieve their goal."
+            </p>
+          </div>
+        </div>
       </div>
       {/* Stats at the bottom */}
       <div className="w-full flex flex-wrap gap-6 mt-32 justify-center items-center mb-4 md:mb-0 md:absolute md:bottom-8 left-0 px-4 md:px-20">
