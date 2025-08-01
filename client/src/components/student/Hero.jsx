@@ -1,6 +1,7 @@
 import React from "react";
 import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
+import NoticeBoard from "./NoticeBoard";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -74,33 +75,43 @@ const Hero = () => {
         </div>
       </div>
       
-      {/* Stats Section - Separate from hero with proper spacing */}
+      {/* Stats and Notice Board Section */}
       <div className="w-full bg-white py-16 px-4 md:px-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap gap-6 justify-center items-center">
-            <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
-              <span className="text-orange-500 text-4xl font-bold mb-2">99.2%</span>
-              <span className="text-blue-900 text-base font-semibold text-center">
-                JEE Success Rate
-              </span>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Stats Section */}
+            <div className="lg:col-span-3">
+              <div className="flex flex-wrap gap-6 justify-center items-center">
+                <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
+                  <span className="text-orange-500 text-4xl font-bold mb-2">99.2%</span>
+                  <span className="text-blue-900 text-base font-semibold text-center">
+                    JEE Success Rate
+                  </span>
+                </div>
+                <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
+                  <span className="text-orange-500 text-4xl font-bold mb-2">97.8%</span>
+                  <span className="text-blue-900 text-base font-semibold text-center">
+                    NEET Success Rate
+                  </span>
+                </div>
+                <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
+                  <span className="text-orange-500 text-4xl font-bold mb-2">15,000+</span>
+                  <span className="text-blue-900 text-base font-semibold text-center">
+                    Students Enrolled
+                  </span>
+                </div>
+                <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
+                  <span className="text-orange-500 text-4xl font-bold mb-2">500+</span>
+                  <span className="text-blue-900 text-base font-semibold text-center">
+                    Top 100 Ranks
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
-              <span className="text-orange-500 text-4xl font-bold mb-2">97.8%</span>
-              <span className="text-blue-900 text-base font-semibold text-center">
-                NEET Success Rate
-              </span>
-            </div>
-            <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
-              <span className="text-orange-500 text-4xl font-bold mb-2">15,000+</span>
-              <span className="text-blue-900 text-base font-semibold text-center">
-                Students Enrolled
-              </span>
-            </div>
-            <div className="bg-blue-100 rounded-xl px-8 py-8 flex flex-col items-center min-w-[160px] shadow-lg border border-blue-200 hover:shadow-xl transition-shadow">
-              <span className="text-orange-500 text-4xl font-bold mb-2">500+</span>
-              <span className="text-blue-900 text-base font-semibold text-center">
-                Top 100 Ranks
-              </span>
+            
+            {/* Notice Board Section */}
+            <div className="lg:col-span-1">
+              <NoticeBoard />
             </div>
           </div>
         </div>
