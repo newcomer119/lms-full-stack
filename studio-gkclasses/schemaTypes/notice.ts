@@ -16,6 +16,12 @@ const notice = {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: 'link',
+      title: 'Notice Link (Optional)',
+      type: 'url',
+      description: 'Add a link if you want the notice to be clickable',
+    },
+    {
       name: 'isNew',
       title: 'Mark as New',
       type: 'boolean',
@@ -59,12 +65,13 @@ const notice = {
       description: 'description',
       isNew: 'isNew',
       isActive: 'isActive',
+      link: 'link',
     },
     prepare(selection: any) {
-      const { title, description, isNew, isActive } = selection;
+      const { title, description, isNew, isActive, link } = selection;
       return {
         title: title,
-        subtitle: `${description?.substring(0, 50)}... ${isNew ? '(NEW)' : ''} ${!isActive ? '(INACTIVE)' : ''}`,
+        subtitle: `${description?.substring(0, 50)}... ${isNew ? '(NEW)' : ''} ${link ? '(LINKED)' : ''} ${!isActive ? '(INACTIVE)' : ''}`,
       };
     },
   },

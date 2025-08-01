@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { sanityClient } from '../../../sanity'
+import { sanityClient } from '../../../sanity';
 
 const NoticeBoard = () => {
   const [notices, setNotices] = useState([]);
@@ -14,10 +14,11 @@ const NoticeBoard = () => {
           title,
           description,
           isNew,
-          priority
+          priority,
+          link
         }`;
         
-        const result = await client.fetch(query);
+        const result = await sanityClient.fetch(query);
         setNotices(result);
         setIsLoading(false);
       } catch (error) {
@@ -40,6 +41,12 @@ const NoticeBoard = () => {
       return () => clearInterval(interval);
     }
   }, [notices.length]);
+
+  const handleNoticeClick = (notice) => {
+    if (notice.link) {
+      window.open(notice.link, '_blank');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -84,7 +91,10 @@ const NoticeBoard = () => {
 
       {/* Notice Content */}
       <div className="relative min-h-[80px]">
-        <div className="transition-all duration-500 ease-in-out">
+        <div 
+          className={`transition-all duration-500 ease-in-out ${currentNotice.link ? 'cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors' : ''}`}
+          onClick={() => handleNoticeClick(currentNotice)}
+        >
           <div className="flex items-start mb-2">
             {currentNotice.isNew && (
               <span className="bg-red-500 text-white text-xs px-2 py-1 rounded mr-3 font-semibold">
@@ -94,6 +104,12 @@ const NoticeBoard = () => {
             <h4 className="text-base font-semibold text-gray-800 flex-1">
               {currentNotice.title}
             </h4>
+            {currentNotice.link && (
+              <svg className="w-4 h-4 text-blue-500 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+              </svg>
+            )}
           </div>
           <p className="text-sm text-gray-600 leading-relaxed">
             {currentNotice.description}
