@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets'
 const CallToAction = () => {
   const handleYouTubeClick = () => {
     // Replace with your actual YouTube channel URL
-    window.open('https://www.youtube.com/@yourchannel', '_blank')
+    window.open('https://www.youtube.com/@vivekpandeygurukul', '_blank')
   }
 
   return (
