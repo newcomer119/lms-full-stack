@@ -1,5 +1,6 @@
 import React from 'react'
 import { assets } from '../../assets/assets'
+import utubeprofile from '../../assets/profile.jpg'
 
 const CallToAction = () => {
   const handleYouTubeClick = () => {
@@ -19,12 +20,17 @@ const CallToAction = () => {
           <div className='relative overflow-hidden rounded-lg shadow-lg'>
             
           </div>
-          
-          {/* Video description */}
-          <div className='mt-4 text-center'>
-            <h3 className='text-lg font-semibold text-gray-800 mb-2'>Competitive Exam Preparation</h3>
-            <p className='text-gray-600 text-sm'>Get expert tips, strategies, and solutions for JEE, NEET, and other competitive exams</p>
-          </div>
+        </div>
+        
+        {/* YouTube Channel Profile Image */}
+        <div className='flex flex-col items-center gap-4'>
+          <img 
+            src={assets.utubeprofile} 
+            alt="YouTube Channel Profile" 
+            className='w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white'
+          />
+          <h4 className='text-xl font-bold text-gray-900'>The Gurukul Classes</h4>
+          <p className='text-gray-600 text-center max-w-md'>Your trusted partner for JEE, NEET, and competitive exam preparation</p>
         </div>
         
         {/* Subscribe button */}

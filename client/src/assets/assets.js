@@ -44,9 +44,11 @@ import profile_img3 from './profile_img3.png'
 import lesson_icon from './lesson_icon.svg'
 import gclogo from './gclogo.jpg'
 import gcdarklogo from './gcdarklogo.png'
+import utubeprofile from './profile.jpg'
 
 
 export const assets = {
+    utubeprofile,
     logo,
     gclogo,
     gcdarklogo,
