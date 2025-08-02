@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
+import { useUser } from '@clerk/clerk-react';
 
 const TestSeries = () => {
   const { backendUrl, getToken } = useContext(AppContext);
+  const { user, isSignedIn } = useUser();
   const [testSeriesList, setTestSeriesList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTest, setActiveTest] = useState(null);
@@ -28,6 +30,11 @@ const TestSeries = () => {
   }, [backendUrl]);
 
   const startTest = async (test) => {
+    if (!isSignedIn) {
+      toast.error('Please login to take the test');
+      return;
+    }
+    
     setActiveTest(test);
     setCurrentQ(0);
     setAnswers([]);
@@ -77,6 +84,7 @@ const TestSeries = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white p-8">
       <h1 className="text-3xl font-bold mb-8 text-blue-600">Test Series</h1>
+      
       <div className="w-full max-w-3xl">
         {testSeriesList.length === 0 && <p>No test series available.</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -85,11 +93,27 @@ const TestSeries = () => {
               <img src={test.image} alt="Test Series" className="w-full h-40 object-cover rounded mb-4" />
               <h2 className="text-xl font-semibold mb-2">{test.title}</h2>
               <p className="mb-4 text-gray-700">{test.description}</p>
-              <button className="bg-blue-600 text-white px-6 py-2 rounded" onClick={() => startTest(test)}>Take Test</button>
+              <button 
+                className={`px-6 py-2 rounded font-semibold transition-colors ${
+                  isSignedIn 
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                }`} 
+                onClick={() => startTest(test)}
+                disabled={!isSignedIn}
+              >
+                {isSignedIn ? 'Take Test' : 'Login Required'}
+              </button>
+              {!isSignedIn && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Please login to access this test
+                </p>
+              )}
             </div>
           ))}
         </div>
       </div>
+
       {/* Test Modal */}
       {activeTest && !showResult && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -125,6 +149,7 @@ const TestSeries = () => {
           </div>
         </div>
       )}
+
       {/* Result Modal */}
       {showResult && result && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
