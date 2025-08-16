@@ -28,15 +28,16 @@ app.use(cors({
   ],
   credentials: true
 }))
+app.use(express.json())
 app.use(clerkMiddleware())
 
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
 app.post('/clerk', express.json() , clerkWebhooks)
-app.use('/api/educator', express.json(), educatorRouter)
-app.use('/api/course', express.json(), courseRouter)
-app.use('/api/user', express.json(), userRouter)
-app.use('/api/testseries', express.json(), testSeriesRouter)
+app.use('/api/educator', educatorRouter)
+app.use('/api/course', courseRouter)
+app.use('/api/user', userRouter)
+app.use('/api/testseries', testSeriesRouter)
 
 // Port
 const PORT = process.env.PORT || 5000

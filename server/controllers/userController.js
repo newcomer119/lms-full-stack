@@ -79,10 +79,15 @@ export const userEnrolledCourses = async (req, res) => {
         const userData = await User.findById(userId)
             .populate('enrolledCourses')
 
-        res.json({ success: true, enrolledCourses: userData.enrolledCourses })
+        if (!userData) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.json({ success: true, enrolledCourses: userData.enrolledCourses || [] })
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        console.error('Error getting enrolled courses:', error);
+        res.status(500).json({ success: false, message: error.message })
     }
 
 }
@@ -134,12 +139,17 @@ export const getUserCourseProgress = async (req, res) => {
 
         const { courseId } = req.body
 
+        if (!courseId) {
+            return res.status(400).json({ success: false, message: 'Course ID is required' });
+        }
+
         const progressData = await CourseProgress.findOne({ userId, courseId })
 
-        res.json({ success: true, progressData })
+        res.json({ success: true, progressData: progressData || { lectureCompleted: [] } })
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        console.error('Error getting course progress:', error);
+        res.status(500).json({ success: false, message: error.message })
     }
 
 }

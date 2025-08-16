@@ -39,12 +39,14 @@ const AddCourse = () => {
       setIsEditing(true);
       loadCourseData();
     }
-  }, [courseId]);
+  }, [courseId, backendUrl]);
 
   const loadCourseData = async () => {
     try {
       setIsLoading(true);
+      console.log('Loading course data for ID:', courseId);
       const { data } = await axios.get(`${backendUrl}/api/course/${courseId}`);
+      console.log('Course data response:', data);
       if (data.success) {
         const course = data.courseData;
         setCourseTitle(course.courseTitle || '');
@@ -63,6 +65,7 @@ const AddCourse = () => {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error('Error loading course data:', error);
       toast.error(error.message);
     } finally {
       setIsLoading(false);

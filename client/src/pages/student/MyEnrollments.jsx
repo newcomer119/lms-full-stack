@@ -3,6 +3,7 @@ import { AppContext } from '../../context/AppContext'
 import axios from 'axios'
 import { Line } from 'rc-progress';
 import Footer from '../../components/student/Footer';
+import { toast } from 'react-toastify';
 
 const MyEnrollments = () => {
 
@@ -13,26 +14,35 @@ const MyEnrollments = () => {
     const getCourseProgress = async () => {
         try {
             const token = await getToken();
+            console.log('Getting course progress for courses:', enrolledCourses);
 
             // Use Promise.all to handle multiple async operations
             const tempProgressArray = await Promise.all(
                 enrolledCourses.map(async (course) => {
-                    const { data } = await axios.post(
-                        `${backendUrl}/api/user/get-course-progress`,
-                        { courseId: course._id },
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
+                    try {
+                        const { data } = await axios.post(
+                            `${backendUrl}/api/user/get-course-progress`,
+                            { courseId: course._id },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
 
-                    // Calculate total lectures
-                    let totalLectures = calculateNoOfLectures(course);
+                        // Calculate total lectures
+                        let totalLectures = calculateNoOfLectures(course);
 
-                    const lectureCompleted = data.progressData ? data.progressData.lectureCompleted.length : 0;
-                    return { totalLectures, lectureCompleted };
+                        const lectureCompleted = data.progressData ? data.progressData.lectureCompleted.length : 0;
+                        console.log(`Course ${course.courseTitle}: ${lectureCompleted}/${totalLectures} completed`);
+                        return { totalLectures, lectureCompleted };
+                    } catch (error) {
+                        console.error(`Error getting progress for course ${course._id}:`, error);
+                        return { totalLectures: 0, lectureCompleted: 0 };
+                    }
                 })
             );
 
+            console.log('Progress array:', tempProgressArray);
             setProgressData(tempProgressArray);
         } catch (error) {
+            console.error('Error in getCourseProgress:', error);
             toast.error(error.message);
         }
     };
@@ -44,11 +54,10 @@ const MyEnrollments = () => {
     }, [userData])
 
     useEffect(() => {
-
+        console.log('enrolledCourses changed:', enrolledCourses);
         if (enrolledCourses.length > 0) {
             getCourseProgress()
         }
-
     }, [enrolledCourses])
 
     return (
@@ -79,7 +88,11 @@ const MyEnrollments = () => {
                                 </td>
                                 <td className="px-4 py-3 max-sm:hidden">{calculateCourseDuration(course)}</td>
                                 <td className="px-4 py-3 max-sm:hidden">
-                                    {progressArray[index] && `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLectures}`}
+                                    {progressArray[index] ? (
+                                        `${progressArray[index].lectureCompleted} / ${progressArray[index].totalLectures}`
+                                    ) : (
+                                        '0 / 0'
+                                    )}
                                     <span className='text-xs ml-2'>Lectures</span>
                                 </td>
                                 <td className="px-4 py-3 max-sm:text-right">

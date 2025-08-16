@@ -137,15 +137,12 @@ const Dashboard = () => {
         <div>
           <div className="flex items-center justify-between pb-4">
             <h2 className="text-lg font-medium">All Courses Management</h2>
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-green-600 font-medium">Free enrollment enabled for testing</p>
-              <button 
-                onClick={() => navigate('/educator/add-course')}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Add New Course
-              </button>
-            </div>
+            <button 
+              onClick={() => navigate('/educator/add-course')}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+              Add New Course
+            </button>
           </div>
           <div className="flex flex-col items-center max-w-6xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
             <table className="table-fixed md:table-auto w-full overflow-hidden">
