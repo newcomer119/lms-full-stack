@@ -1,11 +1,38 @@
 import React from 'react';
-import { assets, dummyTestimonial } from '../../assets/assets';
+import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
 const socialIcons = [
   assets.facebook_icon,
   assets.twitter_icon,
   assets.instagram_icon
+];
+
+const facultyData = [
+  {
+    name: 'Mr. Vivek Pandey',
+    role: 'Physics Teacher (7+ Years Experience)',
+    image: assets.teacher3,
+    subject: 'Physics',
+    experience: '7+ Years',
+    description: 'Specializes in Mechanics, Thermodynamics, and Modern Physics. Known for making complex concepts simple and building strong fundamentals.'
+  },
+  {
+    name: 'Mr. Ashwani Singh',
+    role: 'Mathematics Teacher (5+ Years Experience)',
+    image: assets.teacher1,
+    subject: 'Mathematics',
+    experience: '5+ Years',
+    description: 'Specializes in Algebra, Calculus, and Trigonometry. Known for clear explanations and making mathematics approachable.'
+  },
+  {
+    name: 'Mr. Divyansh Singh',
+    role: 'Chemistry Teacher (4+ Years Experience)',
+    image: assets.teacher2,
+    subject: 'Chemistry',
+    experience: '4+ Years',
+    description: 'Expert in Organic Chemistry and Physical Chemistry. Uses real-world examples to make chemistry engaging and understandable.'
+  },
 ];
 
 const TestimonialsSection = () => {
@@ -25,7 +52,7 @@ const TestimonialsSection = () => {
 
         {/* Faculty Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {dummyTestimonial.slice(0, 3).map((testimonial, index) => (
+          {facultyData.map((teacher, index) => (
             <div
               key={index}
               className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
@@ -36,8 +63,8 @@ const TestimonialsSection = () => {
                   <div className="w-32 h-32 mx-auto rounded-full overflow-hidden ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all duration-300">
                     <img 
                       className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300" 
-                      src={testimonial.image} 
-                      alt={testimonial.name} 
+                      src={teacher.image} 
+                      alt={teacher.name} 
                     />
                   </div>
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
@@ -51,13 +78,13 @@ const TestimonialsSection = () => {
               {/* Content Section */}
               <div className="px-8 pb-8">
                 <h3 className="text-xl font-bold text-gray-900 text-center mb-2 uppercase tracking-wide">
-                  {testimonial.name}
+                  {teacher.name}
                 </h3>
                 <p className="text-sm font-semibold text-center mb-4 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-full inline-block w-full">
-                  {testimonial.role}
+                  {teacher.role}
                 </p>
                 <p className="text-gray-600 text-center leading-relaxed mb-6">
-                  Glavi amet rintsi libero molestie ante ut fringilla purus eros quis glavr id from dolor amet iquam lorem bibendum
+                  {teacher.description}
                 </p>
 
                 {/* Social Icons */}

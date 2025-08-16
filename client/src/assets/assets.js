@@ -45,9 +45,15 @@ import lesson_icon from './lesson_icon.svg'
 import gclogo from './gclogo.jpg'
 import gcdarklogo from './gcdarklogo.png'
 import utubeprofile from './profile.jpg'
+import teacher1 from './teacher1.jpg'
+import teacher2 from './teacher2.jpg'
+import teacher3 from './teacher3.jpg'
 
 
 export const assets = {
+    teacher1,
+    teacher2,
+    teacher3,
     utubeprofile,
     logo,
     gclogo,
