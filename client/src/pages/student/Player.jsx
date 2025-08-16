@@ -14,6 +14,47 @@ const Player = ({ }) => {
 
   const { enrolledCourses, backendUrl, getToken, calculateChapterTime, userData, fetchUserEnrolledCourses } = useContext(AppContext)
 
+  // Function to extract YouTube video ID from various URL formats
+  const extractYouTubeVideoId = (url) => {
+    if (!url) return '';
+    
+    console.log('Extracting video ID from URL:', url);
+    
+    try {
+      // Handle youtu.be format
+      if (url.includes('youtu.be/')) {
+        const videoId = url.split('youtu.be/')[1].split('?')[0];
+        console.log('Extracted video ID (youtu.be):', videoId);
+        return videoId;
+      }
+      
+      // Handle youtube.com format
+      if (url.includes('youtube.com/watch')) {
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        const videoId = urlParams.get('v');
+        console.log('Extracted video ID (youtube.com/watch):', videoId);
+        return videoId;
+      }
+      
+      // Handle youtube.com/embed format
+      if (url.includes('youtube.com/embed/')) {
+        const videoId = url.split('youtube.com/embed/')[1].split('?')[0];
+        console.log('Extracted video ID (youtube.com/embed):', videoId);
+        return videoId;
+      }
+      
+      // Fallback: try to extract from path
+      const pathParts = url.split('/');
+      const lastPart = pathParts[pathParts.length - 1];
+      const videoId = lastPart.split('?')[0];
+      console.log('Extracted video ID (fallback):', videoId);
+      return videoId;
+    } catch (error) {
+      console.error('Error extracting YouTube video ID:', error);
+      return '';
+    }
+  };
+
   const { courseId } = useParams()
   const [courseData, setCourseData] = useState(null)
   const [progressData, setProgressData] = useState(null)
@@ -22,8 +63,13 @@ const Player = ({ }) => {
   const [initialRating, setInitialRating] = useState(0);
 
   const getCourseData = () => {
+    console.log('Getting course data for courseId:', courseId);
+    console.log('Available enrolled courses:', enrolledCourses);
+    
     enrolledCourses.map((course) => {
       if (course._id === courseId) {
+        console.log('Found course data:', course);
+        console.log('Course content:', course.courseContent);
         setCourseData(course)
         course.courseRatings.map((item) => {
           if (item.userId === userData._id) {
@@ -43,6 +89,7 @@ const Player = ({ }) => {
 
 
   useEffect(() => {
+    console.log('enrolledCourses changed, length:', enrolledCourses.length);
     if (enrolledCourses.length > 0) {
       getCourseData()
     }
@@ -152,7 +199,14 @@ const Player = ({ }) => {
                       <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-default">
                         <p>{lecture.lectureTitle}</p>
                         <div className='flex gap-2'>
-                          {lecture.lectureUrl && <p onClick={() => setPlayerData({ ...lecture, chapter: index + 1, lecture: i + 1 })} className='text-blue-500 cursor-pointer'>Watch</p>}
+                          {lecture.lectureUrl && lecture.lectureUrl.trim() !== '' ? (
+                            <p onClick={() => {
+                              console.log('Setting player data:', { ...lecture, chapter: index + 1, lecture: i + 1 });
+                              setPlayerData({ ...lecture, chapter: index + 1, lecture: i + 1 });
+                            }} className='text-blue-500 cursor-pointer'>Watch</p>
+                          ) : (
+                            <p className='text-gray-400 cursor-not-allowed'>No Video</p>
+                          )}
                           <p>{humanizeDuration(lecture.lectureDuration * 60 * 1000, { units: ['h', 'm'] })}</p>
                         </div>
                       </div>
@@ -173,10 +227,28 @@ const Player = ({ }) => {
 
       <div className='md:mt-10'>
         {
-          playerData
+          playerData && playerData.lectureUrl
             ? (
               <div>
-                <YouTube iframeClassName='w-full aspect-video' videoId={playerData.lectureUrl.split('/').pop()} />
+                {playerData.lectureUrl.includes('youtube.com') || playerData.lectureUrl.includes('youtu.be') ? (
+                  (() => {
+                    const videoId = extractYouTubeVideoId(playerData.lectureUrl);
+                    return videoId && videoId.length >= 10 ? (
+                      <YouTube 
+                        iframeClassName='w-full aspect-video' 
+                        videoId={videoId} 
+                      />
+                    ) : (
+                      <div className="w-full aspect-video bg-gray-100 flex items-center justify-center">
+                        <p className="text-gray-500">Invalid video URL</p>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <div className="w-full aspect-video bg-gray-100 flex items-center justify-center">
+                    <p className="text-gray-500">Video content not available</p>
+                  </div>
+                )}
                 <div className='flex justify-between items-center mt-1'>
                   <p className='text-xl '>{playerData.chapter}.{playerData.lecture} {playerData.lectureTitle}</p>
                   <button onClick={() => markLectureAsCompleted(playerData.lectureId)} className='text-blue-600'>{progressData && progressData.lectureCompleted.includes(playerData.lectureId) ? 'Completed' : 'Mark Complete'}</button>

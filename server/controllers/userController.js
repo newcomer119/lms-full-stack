@@ -80,11 +80,20 @@ export const userEnrolledCourses = async (req, res) => {
         const userId = req.auth.userId
 
         const userData = await User.findById(userId)
-            .populate('enrolledCourses')
+            .populate({
+                path: 'enrolledCourses',
+                populate: {
+                    path: 'educator',
+                    select: 'name'
+                }
+            })
 
         if (!userData) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
+
+        console.log('User enrolled courses data:', userData.enrolledCourses);
+        console.log('First course content sample:', userData.enrolledCourses[0]?.courseContent);
 
         res.json({ success: true, enrolledCourses: userData.enrolledCourses || [] })
 

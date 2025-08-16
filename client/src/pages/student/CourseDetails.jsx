@@ -153,12 +153,15 @@ const CourseDetails = () => {
                           <img src={assets.play_icon} alt="bullet icon" className="w-4 h-4 mt-1" />
                           <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-default">
                             <p>{lecture.lectureTitle}</p>
-                            <div className='flex gap-2'>
-                              {lecture.isPreviewFree && <p onClick={() => setPlayerData({
-                                videoId: lecture.lectureUrl.split('/').pop()
-                              })} className='text-blue-500 cursor-pointer'>Preview</p>}
-                              <p>{humanizeDuration(lecture.lectureDuration * 60 * 1000, { units: ['h', 'm'] })}</p>
-                            </div>
+                                                       <div className='flex gap-2'>
+                             {lecture.isPreviewFree && lecture.lectureUrl && (
+                               <p onClick={() => {
+                                 const videoId = lecture.lectureUrl.split('/').pop().split('?')[0];
+                                 setPlayerData({ videoId });
+                               }} className='text-blue-500 cursor-pointer'>Preview</p>
+                             )}
+                             <p>{humanizeDuration(lecture.lectureDuration * 60 * 1000, { units: ['h', 'm'] })}</p>
+                           </div>
                           </div>
                         </li>
                       ))}

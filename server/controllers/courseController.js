@@ -32,14 +32,9 @@ export const getCourseId = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Course not found' });
         }
 
-        // Remove lectureUrl if isPreviewFree is false
-        courseData.courseContent.forEach(chapter => {
-            chapter.chapterContent.forEach(lecture => {
-                if (!lecture.isPreviewFree) {
-                    lecture.lectureUrl = "";
-                }
-            });
-        });
+        // Note: We're not filtering lecture URLs here anymore
+        // All enrolled students should have access to all lecture URLs
+        // The isPreviewFree flag is only used for course previews on the course details page
 
         res.json({ success: true, courseData })
 
