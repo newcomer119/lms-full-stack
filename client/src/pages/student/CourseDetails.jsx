@@ -72,12 +72,10 @@ const CourseDetails = () => {
       )
 
       if (data.success) {
-        // Store purchaseId for test completion after redirect
-        if (data.purchaseId) {
-          localStorage.setItem('test_purchaseId', data.purchaseId);
-        }
-        const { session_url } = data
-        window.location.replace(session_url)
+        toast.success(data.message || 'Course enrolled successfully!');
+        setIsAlreadyEnrolled(true);
+        // Refresh the page or update the state to reflect enrollment
+        window.location.reload();
       } else {
         toast.error(data.message)
       }
@@ -87,23 +85,7 @@ const CourseDetails = () => {
     }
   }
 
-  // Auto-complete test purchase after redirect
-  useEffect(() => {
-    const testPurchaseId = localStorage.getItem('test_purchaseId');
-    if (testPurchaseId && userData) {
-      axios.post(`${backendUrl}/api/user/manual-test-complete`, { purchaseId: testPurchaseId })
-        .then(res => {
-          if (res.data.success) {
-            toast.success('Test enrollment completed!');
-            localStorage.removeItem('test_purchaseId');
-            // Optionally refresh enrollments or page
-          }
-        })
-        .catch(() => {
-          // Optionally handle error
-        });
-    }
-  }, [userData]);
+
 
   useEffect(() => {
     fetchCourseData()
@@ -223,9 +205,9 @@ const CourseDetails = () => {
                 <p>{calculateNoOfLectures(courseData)} lessons</p>
               </div>
             </div>
-            <button onClick={enrollCourse} className="md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium">
-              {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
-            </button>
+                    <button onClick={enrollCourse} className="md:mt-6 mt-4 w-full py-3 rounded bg-blue-600 text-white font-medium">
+          {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now (Free)"}
+        </button>
             <div className="pt-6">
               <p className="md:text-xl text-lg font-medium text-gray-800">What's in the course?</p>
               <ul className="ml-4 pt-2 text-sm md:text-default list-disc text-gray-500">
@@ -234,6 +216,7 @@ const CourseDetails = () => {
                 <li>Downloadable resources and source code.</li>
                 <li>Quizzes to test your knowledge.</li>
                 <li>Certificate of completion.</li>
+                <li className="text-green-600 font-medium">Free enrollment for testing purposes!</li>
               </ul>
             </div>
           </div>

@@ -5,11 +5,14 @@ import Quill from 'quill';
 import uniqid from 'uniqid';
 import axios from 'axios'
 import { AppContext } from '../../context/AppContext';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const AddCourse = () => {
 
   const editorRef = useRef(null);
   const quillRef = useRef(null);
+  const { courseId } = useParams();
+  const navigate = useNavigate();
 
   const { backendUrl, getToken } = useContext(AppContext)
 
@@ -17,6 +20,7 @@ const AddCourse = () => {
   const [coursePrice, setCoursePrice] = useState(0)
   const [discount, setDiscount] = useState(0)
   const [image, setImage] = useState(null)
+  const [existingImage, setExistingImage] = useState('')
   const [chapters, setChapters] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [currentChapterId, setCurrentChapterId] = useState(null);
@@ -26,6 +30,44 @@ const AddCourse = () => {
     lectureUrl: '',
     isPreviewFree: false,
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load course data if editing
+  useEffect(() => {
+    if (courseId) {
+      setIsEditing(true);
+      loadCourseData();
+    }
+  }, [courseId]);
+
+  const loadCourseData = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(`${backendUrl}/api/course/${courseId}`);
+      if (data.success) {
+        const course = data.courseData;
+        setCourseTitle(course.courseTitle || '');
+        setCoursePrice(course.coursePrice || 0);
+        setDiscount(course.discount || 0);
+        setExistingImage(course.courseThumbnail || '');
+        setChapters(course.courseContent || []);
+        
+        // Set Quill content after it's initialized
+        setTimeout(() => {
+          if (quillRef.current) {
+            quillRef.current.root.innerHTML = course.courseDescription || '';
+          }
+        }, 100);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChapter = (action, chapterId) => {
     if (action === 'add') {
@@ -92,11 +134,11 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     try {
-
       e.preventDefault();
 
-      if (!image) {
+      if (!image && !existingImage) {
         toast.error('Thumbnail Not Selected')
+        return;
       }
 
       const courseData = {
@@ -109,22 +151,39 @@ const AddCourse = () => {
 
       const formData = new FormData()
       formData.append('courseData', JSON.stringify(courseData))
-      formData.append('image', image)
+      if (image) {
+        formData.append('image', image)
+      }
 
       const token = await getToken()
 
-      const { data } = await axios.post(backendUrl + '/api/educator/add-course', formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      let response;
+      if (isEditing) {
+        // Update existing course
+        response = await axios.put(`${backendUrl}/api/educator/edit-course/${courseId}`, formData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        // Create new course
+        response = await axios.post(`${backendUrl}/api/educator/add-course`, formData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      const { data } = response;
 
       if (data.success) {
         toast.success(data.message)
-        setCourseTitle('')
-        setCoursePrice(0)
-        setDiscount(0)
-        setImage(null)
-        setChapters([])
-        quillRef.current.root.innerHTML = ""
+        if (isEditing) {
+          navigate('/educator');
+        } else {
+          setCourseTitle('')
+          setCoursePrice(0)
+          setDiscount(0)
+          setImage(null)
+          setChapters([])
+          quillRef.current.root.innerHTML = ""
+        }
       } else (
         toast.error(data.message)
       )
@@ -132,7 +191,6 @@ const AddCourse = () => {
     } catch (error) {
       toast.error(error.message)
     }
-
   };
 
   useEffect(() => {
@@ -147,6 +205,10 @@ const AddCourse = () => {
   useEffect(() => {
     console.log(chapters);
   }, [chapters]);
+
+  if (isLoading) {
+    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className='h-screen overflow-scroll flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0'>
@@ -165,14 +227,14 @@ const AddCourse = () => {
           <div className='flex flex-col gap-1'>
             <p>Course Price</p>
             <input onChange={e => setCoursePrice(e.target.value)} value={coursePrice} type="number" placeholder='0' className='outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500' required />
-          </ div>
+          </div>
 
           <div className='flex md:flex-row flex-col items-center gap-3'>
             <p>Course Thumbnail</p>
             <label htmlFor='thumbnailImage' className='flex items-center gap-3'>
               <img src={assets.file_upload_icon} alt="" className='p-3 bg-blue-500 rounded' />
               <input type="file" id='thumbnailImage' onChange={e => setImage(e.target.files[0])} accept="image/*" hidden />
-              <img className='max-h-10' src={image ? URL.createObjectURL(image) : ''} alt="" />
+              <img className='max-h-10' src={image ? URL.createObjectURL(image) : existingImage} alt="" />
             </label>
           </div>
         </div>
@@ -260,7 +322,7 @@ const AddCourse = () => {
         </div>
 
         <button type="submit" className='bg-black text-white w-max py-2.5 px-8 rounded my-4'>
-          ADD
+          {isEditing ? 'UPDATE' : 'ADD'}
         </button>
       </form>
     </div>

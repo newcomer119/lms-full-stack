@@ -4,12 +4,15 @@ import { AppContext } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
 
   const { backendUrl, isEducator, currency, getToken } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const [dashboardData, setDashboardData] = useState(null)
+  const [allCourses, setAllCourses] = useState([])
 
   const fetchDashboardData = async () => {
     try {
@@ -31,10 +34,28 @@ const Dashboard = () => {
     }
   }
 
+  const fetchAllCourses = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + '/api/course/all');
+      if (data.success) {
+        setAllCourses(data.courses)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const handleEditCourse = (courseId) => {
+    navigate(`/educator/edit-course/${courseId}`)
+  }
+
   useEffect(() => {
 
     if (isEducator) {
       fetchDashboardData()
+      fetchAllCourses()
     }
 
   }, [isEducator])
@@ -111,6 +132,77 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* All Courses Management Section */}
+        <div>
+          <div className="flex items-center justify-between pb-4">
+            <h2 className="text-lg font-medium">All Courses Management</h2>
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-green-600 font-medium">Free enrollment enabled for testing</p>
+              <button 
+                onClick={() => navigate('/educator/add-course')}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Add New Course
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col items-center max-w-6xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
+            <table className="table-fixed md:table-auto w-full overflow-hidden">
+              <thead className="text-gray-900 border-b border-gray-500/20 text-sm text-left">
+                <tr>
+                  <th className="px-4 py-3 font-semibold text-center hidden sm:table-cell">#</th>
+                  <th className="px-4 py-3 font-semibold">Course Title</th>
+                  <th className="px-4 py-3 font-semibold">Educator</th>
+                  <th className="px-4 py-3 font-semibold">Price</th>
+                  <th className="px-4 py-3 font-semibold">Students</th>
+                  <th className="px-4 py-3 font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm text-gray-500">
+                {allCourses.map((course, index) => (
+                  <tr key={course._id} className="border-b border-gray-500/20">
+                    <td className="px-4 py-3 text-center hidden sm:table-cell">{index + 1}</td>
+                    <td className="px-4 py-3 truncate max-w-xs">
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src={course.courseThumbnail}
+                          alt="Course"
+                          className="w-12 h-8 rounded object-cover"
+                        />
+                        <span className="truncate">{course.courseTitle}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 truncate">
+                      {course.educator?.name || 'Unknown'}
+                    </td>
+                    <td className="px-4 py-3">
+                      {currency}{course.coursePrice}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {course.enrolledStudents?.length || 0}
+                    </td>
+                    <td className="px-4 py-3">
+                      <button 
+                        onClick={() => handleEditCourse(course._id)}
+                        className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => navigate(`/course/${course._id}`)}
+                        className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <div>
           <h2 className="pb-4 text-lg font-medium">Latest Enrolments</h2>
           <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">

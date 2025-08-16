@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col md:items-start items-center w-full">
           <img src={assets.gcdarklogo} alt="logo" />
           <p className="mt-6 text-center md:text-left text-sm text-white/80">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
+          Inspired by the ancient Gurukul system, we provide a holistic approach to exam preparation. Our expert faculty and personalized guidance help students excel in competitive exams like JEE, NEET, and Defense services exams. We're dedicated to shaping future leaders, nurturing their potential, and guiding them on a path to success.
           </p>
         </div>
 
@@ -32,17 +32,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="hidden lg:flex flex-col items-start w-full">
-          <h2 className="font-semibold text-white mb-5">Subscribe to our newsletter</h2>
-          <p className="text-sm text-white/80">
-            The latest news, articles, and resources, sent to your inbox weekly.
-          </p>
-          <div className="flex items-center gap-2 pt-4">
-            <input className="border border-gray-500/30 bg-gray-800 text-gray-500 placeholder-gray-500 outline-none w-64 h-9 rounded px-2 text-sm" type="email" placeholder="Enter your email" />
-            <button className="bg-blue-600 w-24 h-9 text-white rounded">Subscribe</button>
-          </div>
-        </div>
-
+        
       </div>
       <p className="py-4 text-center text-xs md:text-sm text-white/60">
         Copyright 2024 ©  All Right Reserved.

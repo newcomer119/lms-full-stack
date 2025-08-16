@@ -2,8 +2,6 @@ import Course from "../models/Course.js"
 import { CourseProgress } from "../models/CourseProgress.js"
 import { Purchase } from "../models/Purchase.js"
 import User from "../models/User.js"
-import { StandardCheckoutClient, Env, MetaInfo, StandardCheckoutPayRequest } from 'pg-sdk-node';
-import { randomUUID } from 'crypto';
 
 
 // Get User Data
@@ -25,62 +23,47 @@ export const getUserData = async (req, res) => {
     }
 }
 
-// Purchase Course 
+// Purchase Course (Payment temporarily disabled for testing)
 export const purchaseCourse = async (req, res) => {
-    // Log at the very start
-    console.log('purchaseCourse called');
-    const clientId = process.env.PHONEPE_CLIENT_ID || '<clientId>';
-    const clientSecret = process.env.PHONEPE_CLIENT_SECRET || '<clientSecret>';
-    const clientVersion = 1; // Set your client version
-    const env = Env.SANDBOX; // Use Env.PRODUCTION when live
-    console.log('PhonePe clientId:', clientId);
-    console.log('PhonePe clientSecret:', clientSecret);
     try {
         const { courseId } = req.body;
-        const { origin } = req.headers;
         const userId = req.auth.userId;
         const courseData = await Course.findById(courseId);
         const userData = await User.findById(userId);
+        
         if (!userData || !courseData) {
             return res.json({ success: false, message: 'Data Not Found' });
         }
+
+        // Check if user is already enrolled
+        if (userData.enrolledCourses.includes(courseId)) {
+            return res.json({ success: false, message: 'Already enrolled in this course' });
+        }
+
+        // Create purchase record with completed status (no payment required for now)
         const purchaseData = {
             courseId: courseData._id,
             userId,
             amount: (courseData.coursePrice - courseData.discount * courseData.coursePrice / 100).toFixed(2),
+            status: 'completed' // Mark as completed without payment
         };
+        
         const newPurchase = await Purchase.create(purchaseData);
-        // PhonePe SDK Payment Initiation
-        const client = StandardCheckoutClient.getInstance(clientId, clientSecret, clientVersion, env);
-        const merchantOrderId = newPurchase._id.toString();
-        const amount = Math.floor(newPurchase.amount * 100); // in paise
-        const redirectUrl = `${origin}/loading/my-enrollments`;
-        const metaInfo = MetaInfo.builder()
-            .udf1(userId)
-            .udf2(courseData._id.toString())
-            .build();
-        const request = StandardCheckoutPayRequest.builder()
-            .merchantOrderId(merchantOrderId)
-            .amount(amount)
-            .redirectUrl(redirectUrl)
-            .metaInfo(metaInfo)
-            .build();
-        try {
-            const response = await client.pay(request);
-            console.log('PhonePe SDK Response:', response);
-            if (response && response.redirectUrl) {
-                res.json({ 
-                    success: true, 
-                    session_url: response.redirectUrl,
-                    purchaseId: newPurchase._id.toString() // Return purchaseId for test completion
-                });
-            } else {
-                res.json({ success: false, message: 'PhonePe payment initiation failed', details: response });
-            }
-        } catch (sdkError) {
-            console.error('PhonePe SDK Error:', sdkError);
-            res.status(400).json({ success: false, message: 'PhonePe SDK error', details: sdkError.message || sdkError });
-        }
+
+        // Add course to user's enrolled courses
+        userData.enrolledCourses.push(courseId);
+        await userData.save();
+
+        // Add user to course's enrolled students
+        courseData.enrolledStudents.push(userId);
+        await courseData.save();
+
+        res.json({ 
+            success: true, 
+            message: 'Course enrolled successfully!',
+            purchaseId: newPurchase._id.toString()
+        });
+
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
