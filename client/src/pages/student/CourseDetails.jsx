@@ -74,8 +74,13 @@ const CourseDetails = () => {
       if (data.success) {
         toast.success(data.message || 'Course enrolled successfully!');
         setIsAlreadyEnrolled(true);
-        // Refresh the page or update the state to reflect enrollment
-        window.location.reload();
+        // Refresh user data to reflect enrollment
+        if (window.location.pathname.includes('/course/')) {
+          // If we're on a course page, navigate to enrollments to see the course
+          window.location.href = '/my-enrollments';
+        } else {
+          window.location.reload();
+        }
       } else {
         toast.error(data.message)
       }

@@ -58,6 +58,9 @@ export const purchaseCourse = async (req, res) => {
         courseData.enrolledStudents.push(userId);
         await courseData.save();
 
+        console.log('User enrolled courses updated:', userData.enrolledCourses);
+        console.log('Course enrolled students updated:', courseData.enrolledStudents);
+
         res.json({ 
             success: true, 
             message: 'Course enrolled successfully!',
@@ -101,6 +104,8 @@ export const updateUserCourseProgress = async (req, res) => {
 
         const { courseId, lectureId } = req.body
 
+        console.log('Updating progress for user:', userId, 'course:', courseId, 'lecture:', lectureId);
+
         const progressData = await CourseProgress.findOne({ userId, courseId })
 
         if (progressData) {
@@ -111,21 +116,24 @@ export const updateUserCourseProgress = async (req, res) => {
 
             progressData.lectureCompleted.push(lectureId)
             await progressData.save()
+            console.log('Progress updated for existing record:', progressData);
 
         } else {
 
-            await CourseProgress.create({
+            const newProgress = await CourseProgress.create({
                 userId,
                 courseId,
                 lectureCompleted: [lectureId]
             })
+            console.log('New progress record created:', newProgress);
 
         }
 
         res.json({ success: true, message: 'Progress Updated' })
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        console.error('Error updating course progress:', error);
+        res.status(500).json({ success: false, message: error.message })
     }
 
 }
@@ -143,7 +151,11 @@ export const getUserCourseProgress = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Course ID is required' });
         }
 
+        console.log('Getting progress for user:', userId, 'course:', courseId);
+
         const progressData = await CourseProgress.findOne({ userId, courseId })
+
+        console.log('Progress data found:', progressData);
 
         res.json({ success: true, progressData: progressData || { lectureCompleted: [] } })
 

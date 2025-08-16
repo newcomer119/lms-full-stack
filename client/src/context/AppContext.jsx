@@ -56,12 +56,15 @@ export const AppContextProvider = (props) => {
                 { headers: { Authorization: `Bearer ${token}` } })
 
             if (data.success) {
+                console.log('User data fetched:', data.user);
                 setUserData(data.user)
-            } else (
+            } else {
+                console.error('Error fetching user data:', data.message);
                 toast.error(data.message)
-            )
+            }
 
         } catch (error) {
+            console.error('Error in fetchUserData:', error);
             toast.error(error.message)
         }
 
@@ -70,16 +73,23 @@ export const AppContextProvider = (props) => {
     // Fetch User Enrolled Courses
     const fetchUserEnrolledCourses = async () => {
 
-        const token = await getToken();
+        try {
+            const token = await getToken();
 
-        const { data } = await axios.get(backendUrl + '/api/user/enrolled-courses',
-            { headers: { Authorization: `Bearer ${token}` } })
+            const { data } = await axios.get(backendUrl + '/api/user/enrolled-courses',
+                { headers: { Authorization: `Bearer ${token}` } })
 
-        if (data.success) {
-            setEnrolledCourses(data.enrolledCourses.reverse())
-        } else (
-            toast.error(data.message)
-        )
+            if (data.success) {
+                console.log('Enrolled courses fetched:', data.enrolledCourses);
+                setEnrolledCourses(data.enrolledCourses.reverse())
+            } else {
+                console.error('Error fetching enrolled courses:', data.message);
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.error('Error in fetchUserEnrolledCourses:', error);
+            toast.error(error.message)
+        }
 
     }
 
