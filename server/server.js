@@ -4,7 +4,7 @@ import 'dotenv/config'
 import connectDB from './configs/mongodb.js'
 import connectCloudinary from './configs/cloudinary.js'
 import userRouter from './routes/userRoutes.js'
-import { clerkMiddleware, ClerkExpressWithAuth } from '@clerk/express'
+import { clerkMiddleware } from '@clerk/express'
 import { clerkWebhooks } from './controllers/webhooks.js'
 import educatorRouter from './routes/educatorRoutes.js'
 import courseRouter from './routes/courseRoute.js'
@@ -83,31 +83,9 @@ app.use((req, res, next) => {
 })
 app.use(express.json())
 
-// Clerk middleware with proper configuration
-app.use(ClerkExpressWithAuth({
-  secretKey: process.env.CLERK_SECRET_KEY,
-  publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-  // This will populate req.auth with user information
-  onError: (err, req, res) => {
-    console.error('Clerk middleware error:', err);
-    
-    // Ensure CORS headers are set even on Clerk errors
-    const origin = req.headers.origin;
-    if (origin && (
-      origin === 'https://thegurukulclasses.com' ||
-      origin === 'https://www.thegurukulclasses.com' ||
-      origin.endsWith('.thegurukulclasses.com')
-    )) {
-      res.header('Access-Control-Allow-Origin', origin);
-    }
-    
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, svix-id, svix-timestamp, svix-signature');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
-    res.status(401).json({ success: false, message: 'Authentication failed' });
-  }
-}))
+// Clerk middleware - this will populate req.auth with user information
+// Make sure CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY are set in your environment variables
+app.use(clerkMiddleware())
 
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
