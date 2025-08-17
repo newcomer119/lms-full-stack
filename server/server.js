@@ -83,6 +83,9 @@ app.use((req, res, next) => {
 })
 app.use(express.json())
 
+// Clerk middleware - this will populate req.auth with user information
+app.use(clerkMiddleware())
+
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
 app.post('/clerk', express.json() , clerkWebhooks)
