@@ -46,7 +46,7 @@ export const AppContextProvider = (props) => {
 
         try {
 
-            if (user.publicMetadata.role === 'educator') {
+            if (user && user.publicMetadata?.role === 'educator') {
                 setIsEducator(true)
             }
 
@@ -96,9 +96,17 @@ export const AppContextProvider = (props) => {
     // Function to Calculate Course Chapter Time
     const calculateChapterTime = (chapter) => {
 
+        if (!chapter || !chapter.chapterContent) {
+            return '0m'
+        }
+
         let time = 0
 
-        chapter.chapterContent.map((lecture) => time += lecture.lectureDuration)
+        chapter.chapterContent.forEach((lecture) => {
+            if (lecture && lecture.lectureDuration) {
+                time += lecture.lectureDuration
+            }
+        })
 
         return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] })
 
@@ -107,13 +115,21 @@ export const AppContextProvider = (props) => {
     // Function to Calculate Course Duration
     const calculateCourseDuration = (course) => {
 
+        if (!course || !course.courseContent) {
+            return '0m'
+        }
+
         let time = 0
 
-        course.courseContent.map(
-            (chapter) => chapter.chapterContent.map(
-                (lecture) => time += lecture.lectureDuration
-            )
-        )
+        course.courseContent.forEach((chapter) => {
+            if (chapter && chapter.chapterContent) {
+                chapter.chapterContent.forEach((lecture) => {
+                    if (lecture && lecture.lectureDuration) {
+                        time += lecture.lectureDuration
+                    }
+                })
+            }
+        })
 
         return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] })
 
@@ -121,7 +137,7 @@ export const AppContextProvider = (props) => {
 
     const calculateRating = (course) => {
 
-        if (course.courseRatings.length === 0) {
+        if (!course || !course.courseRatings || course.courseRatings.length === 0) {
             return 0
         }
 
@@ -133,9 +149,13 @@ export const AppContextProvider = (props) => {
     }
 
     const calculateNoOfLectures = (course) => {
+        if (!course || !course.courseContent) {
+            return 0;
+        }
+        
         let totalLectures = 0;
         course.courseContent.forEach(chapter => {
-            if (Array.isArray(chapter.chapterContent)) {
+            if (chapter && Array.isArray(chapter.chapterContent)) {
                 totalLectures += chapter.chapterContent.length;
             }
         });

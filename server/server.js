@@ -19,14 +19,39 @@ await connectCloudinary()
 
 // Middlewares
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://lms-full-stack-taupe-six.vercel.app',
-    'https://gurukul-classes-iota.vercel.app',
-    'https://lms-full-stack-ku7w.vercel.app',
-    'https://thegurukulclasses.com' // <-- no trailing slash
-  ],
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://lms-full-stack-taupe-six.vercel.app',
+      'https://gurukul-classes-iota.vercel.app',
+      'https://lms-full-stack-ku7w.vercel.app',
+      'https://thegurukulclasses.com',
+      'https://www.thegurukulclasses.com'
+    ];
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Allow subdomains of thegurukulclasses.com
+    if (origin.endsWith('.thegurukulclasses.com')) {
+      return callback(null, true);
+    }
+    
+    // Log blocked origins for debugging
+    console.log('Blocked origin:', origin);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'svix-id', 'svix-timestamp', 'svix-signature'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400 // Cache preflight for 24 hours
 }))
 app.use(express.json())
 app.use(clerkMiddleware())

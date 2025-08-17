@@ -10,15 +10,46 @@ export const getUserData = async (req, res) => {
 
         const userId = req.auth.userId
 
-        const user = await User.findById(userId)
+        let user = await User.findById(userId)
 
+        // If user not found, try to create them from Clerk data
         if (!user) {
-            return res.json({ success: false, message: 'User Not Found' })
+            console.log('User not found in database, attempting to create from Clerk data:', userId);
+            
+            try {
+                // Import clerkClient dynamically to avoid circular imports
+                const { clerkClient } = await import('@clerk/express');
+                
+                // Get user data from Clerk
+                const clerkUser = await clerkClient.users.getUser(userId);
+                
+                if (clerkUser) {
+                    // Create user in database
+                    const userData = {
+                        _id: clerkUser.id,
+                        email: clerkUser.emailAddresses?.[0]?.emailAddress || '',
+                        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Unknown User',
+                        imageUrl: clerkUser.imageUrl || '',
+                        enrolledCourses: []
+                    };
+                    
+                    console.log('Creating user from Clerk data:', userData);
+                    user = await User.create(userData);
+                    console.log('User created successfully from Clerk data:', user._id);
+                } else {
+                    console.error('User not found in Clerk either:', userId);
+                    return res.json({ success: false, message: 'User Not Found' });
+                }
+            } catch (clerkError) {
+                console.error('Error creating user from Clerk data:', clerkError);
+                return res.json({ success: false, message: 'User Not Found' });
+            }
         }
 
         res.json({ success: true, user })
 
     } catch (error) {
+        console.error('Error in getUserData:', error);
         res.json({ success: false, message: error.message })
     }
 }
@@ -79,7 +110,7 @@ export const userEnrolledCourses = async (req, res) => {
 
         const userId = req.auth.userId
 
-        const userData = await User.findById(userId)
+        let userData = await User.findById(userId)
             .populate({
                 path: 'enrolledCourses',
                 populate: {
@@ -88,8 +119,38 @@ export const userEnrolledCourses = async (req, res) => {
                 }
             })
 
+        // If user not found, try to create them from Clerk data
         if (!userData) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            console.log('User not found in database for enrolled courses, attempting to create from Clerk data:', userId);
+            
+            try {
+                // Import clerkClient dynamically to avoid circular imports
+                const { clerkClient } = await import('@clerk/express');
+                
+                // Get user data from Clerk
+                const clerkUser = await clerkClient.users.getUser(userId);
+                
+                if (clerkUser) {
+                    // Create user in database
+                    const newUserData = {
+                        _id: clerkUser.id,
+                        email: clerkUser.emailAddresses?.[0]?.emailAddress || '',
+                        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Unknown User',
+                        imageUrl: clerkUser.imageUrl || '',
+                        enrolledCourses: []
+                    };
+                    
+                    console.log('Creating user from Clerk data for enrolled courses:', newUserData);
+                    userData = await User.create(newUserData);
+                    console.log('User created successfully from Clerk data for enrolled courses:', userData._id);
+                } else {
+                    console.error('User not found in Clerk either for enrolled courses:', userId);
+                    return res.status(404).json({ success: false, message: 'User not found' });
+                }
+            } catch (clerkError) {
+                console.error('Error creating user from Clerk data for enrolled courses:', clerkError);
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
         }
 
         console.log('User enrolled courses data:', userData.enrolledCourses);
