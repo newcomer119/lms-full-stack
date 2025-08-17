@@ -90,6 +90,21 @@ app.use(ClerkExpressWithAuth({
   // This will populate req.auth with user information
   onError: (err, req, res) => {
     console.error('Clerk middleware error:', err);
+    
+    // Ensure CORS headers are set even on Clerk errors
+    const origin = req.headers.origin;
+    if (origin && (
+      origin === 'https://thegurukulclasses.com' ||
+      origin === 'https://www.thegurukulclasses.com' ||
+      origin.endsWith('.thegurukulclasses.com')
+    )) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
+    
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, svix-id, svix-timestamp, svix-signature');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
     res.status(401).json({ success: false, message: 'Authentication failed' });
   }
 }))
