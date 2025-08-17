@@ -151,7 +151,7 @@ const Dashboard = () => {
                   <th className="px-4 py-3 font-semibold text-center hidden sm:table-cell">#</th>
                   <th className="px-4 py-3 font-semibold">Course Title</th>
                   <th className="px-4 py-3 font-semibold">Educator</th>
-                  <th className="px-4 py-3 font-semibold">Price</th>
+                  {/* <th className="px-4 py-3 font-semibold">Price</th> */}
                   <th className="px-4 py-3 font-semibold">Students</th>
                   <th className="px-4 py-3 font-semibold">Actions</th>
                 </tr>
@@ -173,9 +173,9 @@ const Dashboard = () => {
                     <td className="px-4 py-3 truncate">
                       {course.educator?.name || 'Unknown'}
                     </td>
-                    <td className="px-4 py-3">
+                    {/* <td className="px-4 py-3">
                       {currency}{course.coursePrice}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-3 text-center">
                       {course.enrolledStudents?.length || 0}
                     </td>

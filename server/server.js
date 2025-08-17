@@ -4,7 +4,7 @@ import 'dotenv/config'
 import connectDB from './configs/mongodb.js'
 import connectCloudinary from './configs/cloudinary.js'
 import userRouter from './routes/userRoutes.js'
-import { clerkMiddleware } from '@clerk/express'
+import { clerkMiddleware, ClerkExpressWithAuth } from '@clerk/express'
 import { clerkWebhooks } from './controllers/webhooks.js'
 import educatorRouter from './routes/educatorRoutes.js'
 import courseRouter from './routes/courseRoute.js'
@@ -54,7 +54,17 @@ app.use(cors({
   maxAge: 86400 // Cache preflight for 24 hours
 }))
 app.use(express.json())
-app.use(clerkMiddleware())
+
+// Clerk middleware with proper configuration
+app.use(ClerkExpressWithAuth({
+  secretKey: process.env.CLERK_SECRET_KEY,
+  publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+  // This will populate req.auth with user information
+  onError: (err, req, res) => {
+    console.error('Clerk middleware error:', err);
+    res.status(401).json({ success: false, message: 'Authentication failed' });
+  }
+}))
 
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
