@@ -35,11 +35,13 @@ app.use(cors({
     
     // Check if origin is in allowed list
     if (allowedOrigins.includes(origin)) {
+      console.log('Allowed origin:', origin);
       return callback(null, true);
     }
     
     // Allow subdomains of thegurukulclasses.com
     if (origin.endsWith('.thegurukulclasses.com')) {
+      console.log('Allowed subdomain origin:', origin);
       return callback(null, true);
     }
     
@@ -51,8 +53,34 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'svix-id', 'svix-timestamp', 'svix-signature'],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  maxAge: 86400 // Cache preflight for 24 hours
+  maxAge: 86400, // Cache preflight for 24 hours
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }))
+
+// Add CORS headers to all responses as a fallback
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  if (origin && (
+    origin === 'https://thegurukulclasses.com' ||
+    origin === 'https://www.thegurukulclasses.com' ||
+    origin.endsWith('.thegurukulclasses.com')
+  )) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, svix-id, svix-timestamp, svix-signature');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+})
 app.use(express.json())
 
 // Clerk middleware with proper configuration
@@ -80,3 +108,28 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 })
+
+// Global error handler to ensure CORS headers are always sent
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  
+  // Ensure CORS headers are set even on errors
+  const origin = req.headers.origin;
+  if (origin && (
+    origin === 'https://thegurukulclasses.com' ||
+    origin === 'https://www.thegurukulclasses.com' ||
+    origin.endsWith('.thegurukulclasses.com')
+  )) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, svix-id, svix-timestamp, svix-signature');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Send error response
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error'
+  });
+});
