@@ -4,7 +4,6 @@ import 'dotenv/config'
 import connectDB from './configs/mongodb.js'
 import connectCloudinary from './configs/cloudinary.js'
 import userRouter from './routes/userRoutes.js'
-import { clerkMiddleware } from '@clerk/express'
 import { clerkWebhooks } from './controllers/webhooks.js'
 import educatorRouter from './routes/educatorRoutes.js'
 import courseRouter from './routes/courseRoute.js'
@@ -82,10 +81,6 @@ app.use((req, res, next) => {
   next();
 })
 app.use(express.json())
-
-// Clerk middleware - this will populate req.auth with user information
-// Make sure CLERK_SECRET_KEY and CLERK_PUBLISHABLE_KEY are set in your environment variables
-app.use(clerkMiddleware())
 
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
