@@ -8,7 +8,13 @@ import User from "../models/User.js"
 export const getUserData = async (req, res) => {
     try {
 
-        const userId = req.auth.userId
+        const userId = req.auth?.userId
+
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            console.error('Invalid userId received:', userId);
+            return res.json({ success: false, message: 'Invalid user ID' });
+        }
 
         let user = await User.findById(userId)
 
@@ -58,7 +64,14 @@ export const getUserData = async (req, res) => {
 export const purchaseCourse = async (req, res) => {
     try {
         const { courseId } = req.body;
-        const userId = req.auth.userId;
+        const userId = req.auth?.userId;
+
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            console.error('Invalid userId received for purchase:', userId);
+            return res.json({ success: false, message: 'Invalid user ID' });
+        }
+
         const courseData = await Course.findById(courseId);
         const userData = await User.findById(userId);
         
@@ -108,7 +121,13 @@ export const userEnrolledCourses = async (req, res) => {
 
     try {
 
-        const userId = req.auth.userId
+        const userId = req.auth?.userId
+
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            console.error('Invalid userId received for enrolled courses:', userId);
+            return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        }
 
         let userData = await User.findById(userId)
             .populate({
@@ -170,7 +189,13 @@ export const updateUserCourseProgress = async (req, res) => {
 
     try {
 
-        const userId = req.auth.userId
+        const userId = req.auth?.userId
+
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            console.error('Invalid userId received for progress update:', userId);
+            return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        }
 
         const { courseId, lectureId } = req.body
 
@@ -213,7 +238,13 @@ export const getUserCourseProgress = async (req, res) => {
 
     try {
 
-        const userId = req.auth.userId
+        const userId = req.auth?.userId
+
+        // Validate userId
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            console.error('Invalid userId received for course progress:', userId);
+            return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        }
 
         const { courseId } = req.body
 
@@ -239,7 +270,14 @@ export const getUserCourseProgress = async (req, res) => {
 // Add User Ratings to Course
 export const addUserRating = async (req, res) => {
 
-    const userId = req.auth.userId;
+    const userId = req.auth?.userId;
+    
+    // Validate userId
+    if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+        console.error('Invalid userId received for rating:', userId);
+        return res.json({ success: false, message: 'Invalid user ID' });
+    }
+    
     const { courseId, rating } = req.body;
 
     // Validate inputs
