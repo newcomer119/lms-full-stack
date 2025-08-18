@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Routes, Route, useLocation, useMatch } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import Navbar from './components/student/Navbar'
 import Home from './pages/student/Home'
 import CourseDetails from './pages/student/CourseDetails'
@@ -29,6 +30,22 @@ const App = () => {
 
   return (
     <div className="text-default min-h-screen bg-white">
+      <Helmet>
+        <title>GK Classes - Best Online Learning Platform</title>
+        <meta name="description" content="GK Classes offers comprehensive online courses, test series, and educational content. Learn from expert educators and prepare for competitive exams." />
+        <meta name="keywords" content="online learning, competitive exams, test series, GK classes, education, online courses" />
+        <meta name="author" content="GK Classes" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="GK Classes - Best Online Learning Platform" />
+        <meta property="og:description" content="GK Classes offers comprehensive online courses, test series, and educational content. Learn from expert educators and prepare for competitive exams." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://yourdomain.com" />
+        <meta property="og:image" content="https://yourdomain.com/logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GK Classes - Best Online Learning Platform" />
+        <meta name="twitter:description" content="GK Classes offers comprehensive online courses, test series, and educational content." />
+        <link rel="canonical" href="https://yourdomain.com" />
+      </Helmet>
       <ToastContainer />
       {/* Render Student Navbar only if not on educator routes */}
       {!isEducatorRoute && <Navbar />}

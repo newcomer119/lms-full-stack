@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet'
 
 const Dashboard = () => {
 
@@ -108,6 +109,15 @@ const Dashboard = () => {
 
   return dashboardData ? (
     <div className='min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0'>
+      <Helmet>
+        <title>Dashboard - GK Classes Educator Portal</title>
+        <meta name="description" content="View your teaching analytics, course performance, and student engagement metrics in the GK Classes educator dashboard." />
+        <meta name="keywords" content="educator dashboard, teaching analytics, course performance, student metrics, GK classes teacher portal" />
+        <meta property="og:title" content="Dashboard - GK Classes Educator Portal" />
+        <meta property="og:description" content="View your teaching analytics and course performance in the GK Classes educator dashboard." />
+        <meta property="og:url" content="https://yourdomain.com/educator" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className='space-y-5'>
         <div className='flex flex-wrap gap-5 items-center'>
           <div className='flex items-center gap-3 shadow-card border border-blue-500 p-4 w-56 rounded-md'>

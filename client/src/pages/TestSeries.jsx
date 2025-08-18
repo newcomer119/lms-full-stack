@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
 import { useUser } from '@clerk/clerk-react';
+import { Helmet } from 'react-helmet';
 
 const TestSeries = () => {
   const { backendUrl, getToken } = useContext(AppContext);
@@ -83,6 +84,15 @@ const TestSeries = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white p-8">
+      <Helmet>
+        <title>Test Series - GK Classes | Practice Tests for Competitive Exams</title>
+        <meta name="description" content="Practice with our comprehensive test series at GK Classes. Prepare for IIT-JEE, NEET, NDA, and other competitive exams with expert-designed practice tests and detailed analysis." />
+        <meta name="keywords" content="test series, practice tests, competitive exam preparation, IIT-JEE tests, NEET tests, NDA tests, online practice tests" />
+        <meta property="og:title" content="Test Series - GK Classes | Practice Tests for Competitive Exams" />
+        <meta property="og:description" content="Practice with our comprehensive test series at GK Classes. Prepare for competitive exams with expert-designed practice tests." />
+        <meta property="og:url" content="https://yourdomain.com/test-series" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <h1 className="text-3xl font-bold mb-8 text-blue-600">Test Series</h1>
       
       <div className="w-full max-w-3xl">

@@ -1,9 +1,19 @@
 import React from 'react';
 import { assets } from '../../assets/assets';
+import { Helmet } from 'react-helmet';
 
 const ContactUs = () => {
   return (
     <div className="w-full flex justify-center items-center px-1 md:px-4 py-16 bg-white">
+      <Helmet>
+        <title>Contact Us - GK Classes | Get in Touch</title>
+        <meta name="description" content="Contact GK Classes for any queries about our online courses, test series, or competitive exam preparation. Reach us via phone, email, or visit our center in Prayagraj, India." />
+        <meta name="keywords" content="contact GK classes, customer support, online education help, competitive exam queries, GK classes contact information" />
+        <meta property="og:title" content="Contact Us - GK Classes | Get in Touch" />
+        <meta property="og:description" content="Contact GK Classes for any queries about our online courses, test series, or competitive exam preparation." />
+        <meta property="og:url" content="https://yourdomain.com/contact" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="w-full max-w-6xl bg-white border-2 rounded-lg md:rounded-xl flex flex-col md:flex-row p-0 overflow-hidden" style={{minHeight: '520px'}}>
         {/* Left: Contact Form */}
         <div className="flex-1 p-12 flex flex-col items-center">

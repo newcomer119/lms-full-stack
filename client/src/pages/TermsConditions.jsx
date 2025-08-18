@@ -1,9 +1,19 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Footer from '../components/student/Footer';
 
 const TermsConditions = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Terms & Conditions - GK Classes | Platform Usage Terms</title>
+        <meta name="description" content="Read GK Classes terms and conditions for using our online education platform. Learn about user responsibilities, payment terms, course access, and platform usage policies." />
+        <meta name="keywords" content="terms and conditions, GK classes terms, platform usage terms, online education terms, user agreement" />
+        <meta property="og:title" content="Terms & Conditions - GK Classes | Platform Usage Terms" />
+        <meta property="og:description" content="Read GK Classes terms and conditions for using our online education platform. Learn about user responsibilities and policies." />
+        <meta property="og:url" content="https://yourdomain.com/terms-conditions" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-blue-800 mb-8">Terms & Conditions</h1>
         

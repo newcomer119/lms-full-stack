@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import Footer from '../../components/student/Footer'
 import { assets } from '../../assets/assets'
 import CourseCard from '../../components/student/CourseCard';
@@ -34,6 +35,15 @@ const CoursesList = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Course List - GK Classes | Browse All Online Courses</title>
+                <meta name="description" content="Explore our comprehensive collection of online courses at GK Classes. Find the perfect course for competitive exam preparation, skill development, and personal growth." />
+                <meta name="keywords" content="online courses, course list, competitive exam courses, GK classes courses, online learning courses" />
+                <meta property="og:title" content="Course List - GK Classes | Browse All Online Courses" />
+                <meta property="og:description" content="Explore our comprehensive collection of online courses at GK Classes. Find the perfect course for competitive exam preparation." />
+                <meta property="og:url" content="https://yourdomain.com/course-list" />
+                <meta property="og:type" content="website" />
+            </Helmet>
             <div className="relative md:px-36 px-8 pt-20 text-left">
                 <div className='flex md:flex-row flex-col gap-6 items-start justify-between w-full'>
                     <div>

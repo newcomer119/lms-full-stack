@@ -1,9 +1,19 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Footer from '../components/student/Footer';
 
 const DataPolicy = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Privacy Policy - GK Classes | Data Protection & Privacy</title>
+        <meta name="description" content="Read GK Classes privacy policy to understand how we collect, use, and protect your personal information. Learn about data security, payment processing, and your privacy rights." />
+        <meta name="keywords" content="privacy policy, data protection, GK classes privacy, personal information security, online education privacy" />
+        <meta property="og:title" content="Privacy Policy - GK Classes | Data Protection & Privacy" />
+        <meta property="og:description" content="Read GK Classes privacy policy to understand how we collect, use, and protect your personal information." />
+        <meta property="og:url" content="https://yourdomain.com/privacy-policy" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-blue-800 mb-8">Privacy Policy</h1>
         

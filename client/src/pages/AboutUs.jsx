@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Footer from '../components/student/Footer';
 import Gallery from '../components/student/GallerySlider';
 import { assets } from '../assets/assets';
@@ -15,6 +16,15 @@ const faculty = [
 
 const AboutUs = () => (
   <div className="bg-blue-50 min-h-screen flex flex-col">
+    <Helmet>
+      <title>About Us - GK Classes | Leading Online Education Platform</title>
+      <meta name="description" content="Learn about GK Classes - a premier online education platform founded by Vivek Pandey. We offer expert coaching for IIT-JEE, NEET, NDA, and school-level subjects with experienced faculty." />
+      <meta name="keywords" content="about GK classes, online education platform, competitive exam coaching, IIT-JEE, NEET, NDA, online learning, expert faculty" />
+      <meta property="og:title" content="About Us - GK Classes | Leading Online Education Platform" />
+      <meta property="og:description" content="Learn about GK Classes - a premier online education platform founded by Vivek Pandey. Expert coaching for competitive exams." />
+      <meta property="og:url" content="https://yourdomain.com/about-us" />
+      <meta property="og:type" content="website" />
+    </Helmet>
     <main className="flex flex-col items-center w-full flex-1 px-2 md:px-0 py-10">
       <div className="w-full max-w-7xl min-h-[80vh] bg-white rounded-2xl shadow p-6 md:p-16 flex flex-col gap-10">
         {/* About Us Section */}

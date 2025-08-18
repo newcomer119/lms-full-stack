@@ -1,9 +1,19 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Footer from '../components/student/Footer';
 
 const RefundPolicy = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Refund Policy - GK Classes | Course & Test Series Refunds</title>
+        <meta name="description" content="Learn about GK Classes refund policy for courses and test series. Understand refund terms, timeframes, and conditions for our online educational services." />
+        <meta name="keywords" content="refund policy, course refunds, test series refunds, GK classes refund policy, online education refunds" />
+        <meta property="og:title" content="Refund Policy - GK Classes | Course & Test Series Refunds" />
+        <meta property="og:description" content="Learn about GK Classes refund policy for courses and test series. Understand refund terms and conditions." />
+        <meta property="og:url" content="https://yourdomain.com/refund-policy" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-blue-800 mb-8">Refund Policy</h1>
         

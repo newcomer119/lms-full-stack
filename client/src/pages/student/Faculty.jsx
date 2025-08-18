@@ -1,6 +1,7 @@
 import React from 'react';
 import { assets } from '../../assets/assets';
 import Footer from '../../components/student/Footer';
+import { Helmet } from 'react-helmet';
 
 const socialIcons = [
   assets.facebook_icon,
@@ -70,6 +71,15 @@ const facultyData = [
 const Faculty = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      <Helmet>
+        <title>Our Faculty - GK Classes | Expert Teachers & Educators</title>
+        <meta name="description" content="Meet our expert faculty at GK Classes - experienced teachers specializing in Physics, Chemistry, Mathematics, Biology, English, and Hindi. Learn from the best educators with 4-7+ years of experience." />
+        <meta name="keywords" content="GK classes faculty, expert teachers, physics teacher, chemistry teacher, mathematics teacher, biology teacher, experienced educators, online learning teachers" />
+        <meta property="og:title" content="Our Faculty - GK Classes | Expert Teachers & Educators" />
+        <meta property="og:description" content="Meet our expert faculty at GK Classes - experienced teachers specializing in various subjects with 4-7+ years of experience." />
+        <meta property="og:url" content="https://yourdomain.com/faculty" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="py-20 px-8 md:px-20">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
