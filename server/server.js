@@ -30,7 +30,9 @@ app.use(cors({
       'https://gurukul-classes-iota.vercel.app',
       'https://lms-full-stack-ku7w.vercel.app',
       'https://thegurukulclasses.com',
-      'https://www.thegurukulclasses.com'
+      'https://www.thegurukulclasses.com',
+      'http://www.thegurukulclasses.com',
+      'http://thegurukulclasses.com',
     ];
     
     // Check if origin is in allowed list
