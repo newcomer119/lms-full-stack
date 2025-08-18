@@ -63,17 +63,19 @@ app.use(cors({
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   
+  // Allow both www and non-www versions of your domain
   if (origin && (
     origin === 'https://thegurukulclasses.com' ||
     origin === 'https://www.thegurukulclasses.com' ||
     origin.endsWith('.thegurukulclasses.com')
   )) {
+    // FIXED: Use the actual origin instead of hardcoding the non-www version
     res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
   }
   
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, svix-id, svix-timestamp, svix-signature');
-  res.header('Access-Control-Allow-Credentials', 'true');
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -83,6 +85,7 @@ app.use((req, res, next) => {
   
   next();
 })
+
 app.use(express.json())
 
 // Clerk middleware - this will populate req.auth with user information
@@ -114,6 +117,7 @@ app.use((err, req, res, next) => {
     origin === 'https://www.thegurukulclasses.com' ||
     origin.endsWith('.thegurukulclasses.com')
   )) {
+    // FIXED: Use the actual origin instead of hardcoding
     res.header('Access-Control-Allow-Origin', origin);
   }
   
