@@ -5,6 +5,22 @@ import { protectUser } from '../middlewares/authMiddleware.js'
 
 const userRouter = express.Router()
 
+// Debug middleware for CORS
+userRouter.use((req, res, next) => {
+  console.log('User route - Origin:', req.headers.origin);
+  console.log('User route - Referer:', req.headers.referer);
+  console.log('User route - Method:', req.method);
+  
+  // Ensure CORS headers are set for user routes
+  const origin = req.headers.origin;
+  if (origin) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+  
+  next();
+});
+
 // Get user Data
 userRouter.get('/data', protectUser, getUserData)
 userRouter.post('/purchase', protectUser, purchaseCourse)
