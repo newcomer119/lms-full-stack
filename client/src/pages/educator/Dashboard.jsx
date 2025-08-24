@@ -37,18 +37,6 @@ const Dashboard = () => {
     }
   }
 
-  const getCurrentEducatorId = async () => {
-    try {
-      const token = await getToken()
-      // You can get the current user ID from the token or make a call to get user info
-      // For now, we'll extract it from the token or use a placeholder
-      // This would need to be implemented based on how your auth system works
-      setCurrentEducatorId('current-user-id') // Placeholder
-    } catch (error) {
-      console.error('Error getting current educator ID:', error)
-    }
-  }
-
   const fetchAllCourses = async () => {
     try {
       const { data } = await axios.get(backendUrl + '/api/course/all');
@@ -86,10 +74,12 @@ const Dashboard = () => {
     if (isEducator) {
       fetchDashboardData()
       fetchAllCourses()
-      getCurrentEducatorId()
+      if (user) {
+        setCurrentEducatorId(user.id)
+      }
     }
 
-  }, [isEducator])
+  }, [isEducator, user])
 
   const studentsData = [
     {
