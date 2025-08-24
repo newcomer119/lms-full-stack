@@ -219,11 +219,11 @@ const CourseDetails = () => {
             <div className="pt-6">
               <p className="md:text-xl text-lg font-medium text-gray-800">What's in the course?</p>
                              <ul className="ml-4 pt-2 text-sm md:text-default list-disc text-gray-500">
-                 <li>Lifetime access with free updates.</li>
-                 <li>Step-by-step, hands-on project guidance.</li>
-                 <li>Downloadable resources and source code.</li>
+                 <li>Lifetime access with free content updates for competitive exams like JEE, NEET, and CUET.</li>
+                 <li>In-depth conceptual lectures and practical demonstrations</li>
+                 <li>Downloadable formula sheets, mind maps, and an extensive question bank</li>
                  <li>Quizzes to test your knowledge.</li>
-                 <li>Certificate of completion.</li>
+                 <li>Guidance and strategy sessions </li>
                </ul>
             </div>
           </div>
