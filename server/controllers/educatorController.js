@@ -43,6 +43,13 @@ export const addCourse = async (req, res) => {
         const parsedCourseData = await JSON.parse(courseData)
 
         parsedCourseData.educator = educatorId
+        
+        // Get educator name from Clerk if not provided
+        if (!parsedCourseData.instructorName) {
+            const educatorUser = await clerkClient.users.getUser(educatorId);
+            const educatorName = `${educatorUser.firstName || ''} ${educatorUser.lastName || ''}`.trim() || 'Unknown Instructor';
+            parsedCourseData.instructorName = educatorName;
+        }
 
         const newCourse = await Course.create(parsedCourseData)
 
@@ -186,6 +193,11 @@ export const editCourse = async (req, res) => {
         course.coursePrice = Number(parsedCourseData.coursePrice);
         course.discount = Number(parsedCourseData.discount);
         course.courseContent = parsedCourseData.courseContent;
+        
+        // Update instructor name if provided
+        if (parsedCourseData.instructorName) {
+            course.instructorName = parsedCourseData.instructorName;
+        }
 
         // If a new image is uploaded, update thumbnail
         if (imageFile) {
@@ -195,6 +207,37 @@ export const editCourse = async (req, res) => {
 
         await course.save();
         res.json({ success: true, message: 'Course updated successfully' });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// Update Instructor Name
+export const updateInstructorName = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const educatorId = req.auth.userId;
+        const { instructorName } = req.body;
+
+        // Validate input
+        if (!instructorName || instructorName.trim() === '') {
+            return res.status(400).json({ success: false, message: 'Instructor name is required' });
+        }
+
+        // Find the course and check ownership
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+        if (course.educator !== educatorId) {
+            return res.status(403).json({ success: false, message: 'Unauthorized' });
+        }
+
+        // Update instructor name
+        course.instructorName = instructorName.trim();
+        await course.save();
+
+        res.json({ success: true, message: 'Instructor name updated successfully', instructorName: course.instructorName });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

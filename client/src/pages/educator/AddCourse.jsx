@@ -19,6 +19,7 @@ const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState('')
   const [coursePrice, setCoursePrice] = useState(0)
   const [discount, setDiscount] = useState(0)
+  const [instructorName, setInstructorName] = useState('')
   const [image, setImage] = useState(null)
   const [existingImage, setExistingImage] = useState('')
   const [chapters, setChapters] = useState([]);
@@ -52,6 +53,7 @@ const AddCourse = () => {
         setCourseTitle(course.courseTitle || '');
         setCoursePrice(course.coursePrice || 0);
         setDiscount(course.discount || 0);
+        setInstructorName(course.instructorName || '');
         setExistingImage(course.courseThumbnail || '');
         setChapters(course.courseContent || []);
         
@@ -150,6 +152,7 @@ const AddCourse = () => {
         coursePrice: Number(coursePrice),
         discount: Number(discount),
         courseContent: chapters,
+        instructorName,
       }
 
       const formData = new FormData()
@@ -183,6 +186,7 @@ const AddCourse = () => {
           setCourseTitle('')
           setCoursePrice(0)
           setDiscount(0)
+          setInstructorName('')
           setImage(null)
           setChapters([])
           quillRef.current.root.innerHTML = ""
@@ -218,12 +222,24 @@ const AddCourse = () => {
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-md w-full text-gray-500'>
         <div className='flex flex-col gap-1'>
           <p>Course Title</p>
-          <input onChange={e => setCourseTitle(e.target.value)} value={courseTitle} type="text" placeholder='Type here' className='outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500' required />
+          <input onChange={e => setCourseTitle(e.target.value)} value={courseTitle} type="text" placeholder='Course Title' className='outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500' required />
+        </div>
+
+        <div className='flex flex-col gap-1'>
+          <p>Instructor Name</p>
+          <input 
+            onChange={e => setInstructorName(e.target.value)} 
+            value={instructorName} 
+            type="text" 
+            placeholder='Instructor Name' 
+            className='outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500' 
+            required 
+          />
         </div>
 
         <div className='flex flex-col gap-1'>
           <p>Course Description</p>
-          <div ref={editorRef}></div>
+          <div ref={editorRef} className='outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500 min-h-[200px]' />
         </div>
 
         <div className='flex items-center justify-between flex-wrap'>

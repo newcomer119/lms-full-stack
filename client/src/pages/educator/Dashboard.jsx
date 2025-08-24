@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import Loading from '../../components/student/Loading';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet'
+import CourseInstructorName from '../../components/CourseInstructorName';
 
 const Dashboard = () => {
 
@@ -51,6 +52,21 @@ const Dashboard = () => {
   const handleEditCourse = (courseId) => {
     navigate(`/educator/edit-course/${courseId}`)
   }
+
+  const handleInstructorNameUpdate = async (courseId, newName) => {
+    try {
+      const token = await getToken();
+      await axios.patch(
+        `${backendUrl}/api/educator/update-instructor-name/${courseId}`,
+        { instructorName: newName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchAllCourses(); // Refresh courses to reflect updated name
+      toast.success('Instructor name updated successfully!');
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
 
@@ -160,51 +176,64 @@ const Dashboard = () => {
                 <tr>
                   <th className="px-4 py-3 font-semibold text-center hidden sm:table-cell">#</th>
                   <th className="px-4 py-3 font-semibold">Course Title</th>
-                  <th className="px-4 py-3 font-semibold">Educator</th>
-                  {/* <th className="px-4 py-3 font-semibold">Price</th> */}
+                  <th className="px-4 py-3 font-semibold">Instructor Name</th>
                   <th className="px-4 py-3 font-semibold">Students</th>
                   <th className="px-4 py-3 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-500">
-                {allCourses.map((course, index) => (
-                  <tr key={course._id} className="border-b border-gray-500/20">
-                    <td className="px-4 py-3 text-center hidden sm:table-cell">{index + 1}</td>
-                    <td className="px-4 py-3 truncate max-w-xs">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={course.courseThumbnail}
-                          alt="Course"
-                          className="w-12 h-8 rounded object-cover"
-                        />
-                        <span className="truncate">{course.courseTitle}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 truncate">
-                      {course.educator?.name || 'Unknown'}
-                    </td>
-                    {/* <td className="px-4 py-3">
-                      {currency}{course.coursePrice}
-                    </td> */}
-                    <td className="px-4 py-3 text-center">
-                      {course.enrolledStudents?.length || 0}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button 
-                        onClick={() => handleEditCourse(course._id)}
-                        className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 mr-2"
+                {allCourses.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                      No courses found. <button 
+                        onClick={() => navigate('/educator/add-course')}
+                        className="text-blue-600 hover:text-blue-800 underline ml-2"
                       >
-                        Edit
-                      </button>
-                      <button 
-                        onClick={() => navigate(`/course/${course._id}`)}
-                        className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
-                      >
-                        View
+                        Add your first course
                       </button>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  allCourses.map((course, index) => (
+                    <tr key={course._id} className="border-b border-gray-500/20">
+                      <td className="px-4 py-3 text-center hidden sm:table-cell">{index + 1}</td>
+                      <td className="px-4 py-3 truncate max-w-xs">
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={course.courseThumbnail}
+                            alt="Course"
+                            className="w-12 h-8 rounded object-cover"
+                          />
+                          <span className="truncate">{course.courseTitle}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <CourseInstructorName 
+                          courseId={course._id} 
+                          currentName={course.instructorName || course.educator?.name || 'Unknown'} 
+                          onUpdate={(newName) => handleInstructorNameUpdate(course._id, newName)}
+                        />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {course.enrolledStudents?.length || 0}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button 
+                          onClick={() => handleEditCourse(course._id)}
+                          className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/course/${course._id}`)}
+                          className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

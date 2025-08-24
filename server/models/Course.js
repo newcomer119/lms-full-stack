@@ -29,6 +29,7 @@ const courseSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    instructorName: { type: String, required: true }, // Display name of the instructor
     courseRatings: [
         {
             userId: { type: String },
