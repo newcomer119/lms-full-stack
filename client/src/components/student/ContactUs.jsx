@@ -43,7 +43,7 @@ const ContactUs = () => {
               <span className="text-blue-600 text-xl mt-1">📞</span>
               <div>
                 <span className="font-semibold">Customer Support</span>
-                <p className="text-gray-700 text-sm">+91-991111111</p>
+                <p className="text-gray-700 text-sm">+91-7355740382</p>
               </div>
             </div>
             <div className="flex items-start gap-3">

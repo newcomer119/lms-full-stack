@@ -24,12 +24,13 @@ const Home = () => {
       </Helmet>
       <Hero />
       <CoursesSection />
+      <CallToAction />
       <TestimonialsSection />
       <GallerySlider />
       <div id="contact-us">
         <ContactUs />
       </div>
-      <CallToAction />
+      
       <Footer />
     </div>
   );

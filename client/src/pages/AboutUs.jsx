@@ -114,12 +114,12 @@ const AboutUs = () => (
             <div className="bg-blue-50 rounded-lg p-4 shadow flex flex-col">
               <div className="flex items-center mb-2"><span className="text-xl mr-2">📍</span><span className="font-semibold">Main Branch – Sarai Akil</span></div>
               <p className="text-gray-700 text-sm ml-6">Near Post Office, Sarai Akil, Kaushambi, UP</p>
-              <p className="text-gray-700 text-sm ml-6">📞 Contact: +91-991111111</p>
+              <p className="text-gray-700 text-sm ml-6">📞 Contact: +91-7355740382</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-4 shadow flex flex-col">
               <div className="flex items-center mb-2"><span className="text-xl mr-2">📍</span><span className="font-semibold">Branch – Katra</span></div>
               <p className="text-gray-700 text-sm ml-6">Katra Basuhar Road, Kaushambi, UP</p>
-              <p className="text-gray-700 text-sm ml-6">📞 Contact: +91-991111111</p>
+              <p className="text-gray-700 text-sm ml-6">📞 Contact: +91-7355740382</p>
             </div>
           </div>
         </section>
