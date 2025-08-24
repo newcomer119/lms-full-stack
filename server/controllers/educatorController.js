@@ -71,10 +71,9 @@ export const addCourse = async (req, res) => {
 // Get Educator Courses
 export const getEducatorCourses = async (req, res) => {
     try {
-
-        const educator = req.auth.userId
-
-        const courses = await Course.find({ educator })
+        // Note: Changed to return all courses since any educator can now edit any course
+        // The protectEducator middleware ensures only educators can access this endpoint
+        const courses = await Course.find()
 
         res.json({ success: true, courses })
 
@@ -86,9 +85,9 @@ export const getEducatorCourses = async (req, res) => {
 // Get Educator Dashboard Data ( Total Earning, Enrolled Students, No. of Courses)
 export const educatorDashboardData = async (req, res) => {
     try {
-        const educator = req.auth.userId;
-
-        const courses = await Course.find({ educator });
+        // Note: Changed to show data for all courses since any educator can now edit any course
+        // The protectEducator middleware ensures only educators can access this endpoint
+        const courses = await Course.find();
 
         const totalCourses = courses.length;
 
@@ -133,10 +132,11 @@ export const educatorDashboardData = async (req, res) => {
 // Get Enrolled Students Data with Purchase Data
 export const getEnrolledStudentsData = async (req, res) => {
     try {
-        const educator = req.auth.userId;
-
-        // Fetch all courses created by the educator
-        const courses = await Course.find({ educator });
+        // Note: Changed to show data for all courses since any educator can now edit any course
+        // The protectEducator middleware ensures only educators can access this endpoint
+        
+        // Fetch all courses
+        const courses = await Course.find();
 
         // Get the list of course IDs
         const courseIds = courses.map(course => course._id);
@@ -175,14 +175,14 @@ export const editCourse = async (req, res) => {
         const { courseData } = req.body;
         const imageFile = req.file;
 
-        // Find the course and check ownership
+        // Find the course
         const course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({ success: false, message: 'Course not found' });
         }
-        if (course.educator !== educatorId) {
-            return res.status(403).json({ success: false, message: 'Unauthorized' });
-        }
+
+        // Note: Removed ownership check - any educator can now edit any course
+        // The protectEducator middleware already ensures only educators can access this endpoint
 
         // Parse course data
         const parsedCourseData = JSON.parse(courseData);
@@ -224,14 +224,14 @@ export const updateInstructorName = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Instructor name is required' });
         }
 
-        // Find the course and check ownership
+        // Find the course
         const course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({ success: false, message: 'Course not found' });
         }
-        if (course.educator !== educatorId) {
-            return res.status(403).json({ success: false, message: 'Unauthorized' });
-        }
+
+        // Note: Removed ownership check - any educator can now update instructor names for any course
+        // The protectEducator middleware already ensures only educators can access this endpoint
 
         // Update instructor name
         course.instructorName = instructorName.trim();

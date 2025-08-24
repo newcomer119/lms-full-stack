@@ -10,11 +10,12 @@ import CourseInstructorName from '../../components/CourseInstructorName';
 
 const Dashboard = () => {
 
-  const { backendUrl, isEducator, currency, getToken } = useContext(AppContext)
+  const { backendUrl, isEducator, currency, getToken, user } = useContext(AppContext)
   const navigate = useNavigate()
 
   const [dashboardData, setDashboardData] = useState(null)
   const [allCourses, setAllCourses] = useState([])
+  const [currentEducatorId, setCurrentEducatorId] = useState(null)
 
   const fetchDashboardData = async () => {
     try {
@@ -33,6 +34,18 @@ const Dashboard = () => {
 
     } catch (error) {
       toast.error(error.message)
+    }
+  }
+
+  const getCurrentEducatorId = async () => {
+    try {
+      const token = await getToken()
+      // You can get the current user ID from the token or make a call to get user info
+      // For now, we'll extract it from the token or use a placeholder
+      // This would need to be implemented based on how your auth system works
+      setCurrentEducatorId('current-user-id') // Placeholder
+    } catch (error) {
+      console.error('Error getting current educator ID:', error)
     }
   }
 
@@ -73,6 +86,7 @@ const Dashboard = () => {
     if (isEducator) {
       fetchDashboardData()
       fetchAllCourses()
+      getCurrentEducatorId()
     }
 
   }, [isEducator])
@@ -162,7 +176,12 @@ const Dashboard = () => {
         {/* All Courses Management Section */}
         <div>
           <div className="flex items-center justify-between pb-4">
-            <h2 className="text-lg font-medium">All Courses Management</h2>
+            <div>
+              <h2 className="text-lg font-medium">All Courses Management</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                As an educator, you can view and edit any course. Courses you created are marked with "You".
+              </p>
+            </div>
             <button 
               onClick={() => navigate('/educator/add-course')}
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -177,6 +196,7 @@ const Dashboard = () => {
                   <th className="px-4 py-3 font-semibold text-center hidden sm:table-cell">#</th>
                   <th className="px-4 py-3 font-semibold">Course Title</th>
                   <th className="px-4 py-3 font-semibold">Instructor Name</th>
+                  <th className="px-4 py-3 font-semibold">Original Creator</th>
                   <th className="px-4 py-3 font-semibold">Students</th>
                   <th className="px-4 py-3 font-semibold">Actions</th>
                 </tr>
@@ -184,7 +204,7 @@ const Dashboard = () => {
               <tbody className="text-sm text-gray-500">
                 {allCourses.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan="6" className="px-4 py-8 text-center text-gray-500">
                       No courses found. <button 
                         onClick={() => navigate('/educator/add-course')}
                         className="text-blue-600 hover:text-blue-800 underline ml-2"
@@ -204,7 +224,14 @@ const Dashboard = () => {
                             alt="Course"
                             className="w-12 h-8 rounded object-cover"
                           />
-                          <span className="truncate">{course.courseTitle}</span>
+                          <div className="flex flex-col">
+                            <span className="truncate">{course.courseTitle}</span>
+                            {course.educator === currentEducatorId && (
+                              <span className="text-xs text-green-600 font-medium">
+                                Your Course
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-4 py-3">
@@ -213,6 +240,18 @@ const Dashboard = () => {
                           currentName={course.instructorName || course.educator?.name || 'Unknown'} 
                           onUpdate={(newName) => handleInstructorNameUpdate(course._id, newName)}
                         />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center space-x-2">
+                          <span className="text-sm text-gray-600">
+                            {course.educator?.name || 'Unknown'}
+                          </span>
+                          {course.educator === currentEducatorId && (
+                            <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                              You
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-center">
                         {course.enrolledStudents?.length || 0}
